@@ -30,8 +30,8 @@ public class Game extends BasicGame {
     public void init(GameContainer container) throws SlickException {
         input = container.getInput();
         setGameField();
-        container.setMinimumLogicUpdateInterval(40);
-        container.setMaximumLogicUpdateInterval(40);
+        container.setMinimumLogicUpdateInterval(5);
+        container.setMaximumLogicUpdateInterval(5);
 
     }
 
