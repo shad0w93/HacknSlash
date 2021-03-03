@@ -10,6 +10,7 @@ import org.newdawn.slick.geom.Circle;
 import hackNSlay.EnemyState;
 
 public class NormalGnome implements EnemyState {
+	boolean test = false; // false = nach X laufen; true = nach Y laufen;
 
 	public NormalGnome(Gnome gnome) {
 		gnome.xPos = 100;
@@ -23,25 +24,53 @@ public class NormalGnome implements EnemyState {
 	public void movementAction(Gnome gnome) {
 
 		boolean playerReached = false;
-		float playerPosX = 50;
-		float playerPosY = 500;
-		Integer stepValue = 5;
+		float playerPosX = 1000;
+		float playerPosY = 1000;
+		int stepValue = 5;
+		// p = 105 g = 100
 
-		if (!gnome.circle.contains(playerPosX, playerPosY)) {
-			if (playerPosX > gnome.xPos) {
-				gnome.xPos = gnome.xPos - stepValue;
-				gnome.circle.setCenterX(gnome.xPos);
-			}else if (playerPosX < gnome.xPos) {
-				gnome.xPos = gnome.xPos + stepValue;
-				gnome.circle.setCenterX(gnome.xPos);
-			}else if (playerPosY > gnome.yPos) {
-				gnome.yPos = gnome.yPos + stepValue;
-				gnome.circle.setCenterY(gnome.xPos);
-			}else if (playerPosY < gnome.yPos) {
-				gnome.yPos = gnome.yPos - stepValue;
-				gnome.circle.setCenterY(gnome.xPos);			
+		if (!test) {
+			if (gnome.xPos > (playerPosX - 10) && gnome.xPos < (playerPosX + 10)) {
+				test = true;
+				moveUpDown(gnome);
+			} else {
+				moveLeftRight(gnome);
+			}
+		} else {
+			if (gnome.yPos > (playerPosY - 10) && gnome.yPos < (playerPosY + 10)) {
+				test = false;
+				moveLeftRight(gnome);
+			} else {
+				moveUpDown(gnome);
 			}
 		}
-}
+	}
 
+	public void moveLeftRight(Gnome gnome) {
+		float playerPosX = 1000;
+		float playerPosY = 1000;
+		int stepValue = 5;
+
+		if (playerPosX > gnome.xPos) {
+			gnome.xPos = gnome.xPos + stepValue;
+			gnome.circle.setCenterX(gnome.xPos);
+		} else if (playerPosX < gnome.xPos) {
+			gnome.xPos = gnome.xPos - stepValue;
+			gnome.circle.setCenterX(gnome.xPos);
+		}
+	}
+
+	public void moveUpDown(Gnome gnome) {
+		float playerPosX = 1000;
+		float playerPosY = 1000;
+		int stepValue = 5;
+
+		if (playerPosY > gnome.yPos) {
+			gnome.yPos = gnome.yPos + stepValue;
+			gnome.circle.setCenterY(gnome.yPos);
+		} else if (playerPosY < gnome.yPos) {
+			gnome.yPos = gnome.yPos - stepValue;
+			gnome.circle.setCenterY(gnome.yPos);
+		}
+	}
 }
