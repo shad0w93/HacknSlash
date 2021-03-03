@@ -11,11 +11,11 @@ public class Game extends BasicGame {
 	private Rectangle mainGame;
 	private int xMainGame;
 	private int yMainGame;
-	Gnom gnom;
+	Gnome gnom;
 
 	public Game() {
 		super("Hack´n´Slash");
-		gnom = new Gnom();
+		gnom = new Gnome();
 	}
 
 	public static void main(String[] args) throws SlickException {
@@ -51,7 +51,7 @@ public class Game extends BasicGame {
 		xMainGame = 0;
 		yMainGame = 0;
 		mainGame = new Rectangle(xMainGame,yMainGame,1000,1000);
-		gnom = new Gnom();
+		gnom = new Gnome();
 
 	}
 }

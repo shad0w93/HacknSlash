@@ -4,8 +4,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-import enemies.Gnom;
+import enemies.Gnome;
 
 public interface EnemyState{
-	public void movementAction(Gnom gnom);
+	public void movementAction(Gnome gnom);
 }
