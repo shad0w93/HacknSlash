@@ -3,7 +3,7 @@ package hackNSlay;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
-import levelgenerator.Dungeon;
+import levelgenerator.*;
 
 public class Game extends BasicGame {
 

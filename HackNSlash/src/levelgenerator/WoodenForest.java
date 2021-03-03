@@ -59,9 +59,43 @@ public class WoodenForest implements DungeonState {
 		
 	}
 	
-	public void generateRoomDoors(Dungeon dungeon, int middleRoomX,int middleRoomY) {
-		int[] roomX = {middleRoomX, middleRoomX +1, middleRoomX, middleRoomX -1};
-		int[] roomY = {middleRoomY +1, middleRoomY, middleRoomY -1, middleRoomY};
+	public void generateRoomDoors(Dungeon dungeon, int roomX,int roomY) {
+		int[] roomsAroundX = {roomX +1, roomX, roomX -1, roomX};
+		int[] roomsAroundY = {roomY, roomY +1, roomY, roomY -1};
+		boolean[][][] doorCanBeGenerated = new boolean[dungeon.levelRoomDoors.length][dungeon.levelRoomDoors[0].length][dungeon.levelRoomDoors[0][0].length];
+		
+		//Prüfe ob außenrum nochmal ein Raum existiert, da man ja ansonsten dort auch keine Tür hinmachen kann.
+		for(int i = 0; i < dungeon.levelRoomDoors.length; i++) {
+			//Raum existiert?
+			if(roomsAroundX[i] <= dungeon.levelRoomDoors.length && roomsAroundY[i] <= dungeon.levelRoomDoors[i].length) {
+				//Ist von der aktuellen Türgenerationsposition (oben unten etc...) das gegenteil
+				int otherSide;
+				if(i == 0) {
+					otherSide = 2;
+				} else if (i == 1) {
+					otherSide = 3;
+				} else if (i == 2) {
+					otherSide = 0;
+				} else if (i == 3) {
+					otherSide = 1;
+				}
+				//Ist denn in dem Raum der daran anschließt bereits eine Tür (Sollte dort ein Raum existieren)?
+				if(dungeon.levelRoomDoors[roomsAroundX[i]][roomsAroundY[i]][otherSide] == 1) {
+					doorCanBeGenerated[roomX][roomY][i] = true;
+				} else {
+					int checkRoomX;
+					int checkRoomY;
+					boolean nextRoomHasNoDoors = false;
+					for (int y = 0; y < dungeon.levelRoomDoors[middleX][middleY].length; y++) {
+						if (dungeon.levelRoomDoors[middleX][middleY][i] == 1) {
+							middleDoorsGenerated = true;
+						}
+					}
+				}
+			}
+		}
+		
+		
 	}
 	
 	@Override
