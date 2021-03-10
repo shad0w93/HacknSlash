@@ -55,28 +55,6 @@ public class Dungeon {
 	};
 
 	public void update(GameContainer container, int delta, Input input) throws SlickException {
-		if (input.isKeyPressed(Input.KEY_UP)) {
-			if(levelPositionY < maxYPosition -1) {
-				levelPositionY++;
-			}
-		}
-		if (input.isKeyPressed(Input.KEY_DOWN)) {
-			if(levelPositionY > 0) {
-				levelPositionY--;
-			}
-		}
-		if (input.isKeyPressed(Input.KEY_RIGHT)) {
-			if(levelPositionX < maxYPosition -1) {
-				levelPositionX++;
-			}
-		}
-		if (input.isKeyPressed(Input.KEY_LEFT)) {
-			if(levelPositionX > 0) {
-				levelPositionX--;
-			}
-		}
-		if (input.isKeyPressed(Input.KEY_L)) {
-			dungeonState.newDungeonLevel(this);
-		}
+
 	};
 }

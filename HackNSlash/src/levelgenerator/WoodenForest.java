@@ -9,7 +9,7 @@ import org.w3c.dom.css.Rect;
 
 public class WoodenForest implements DungeonState {
 	public int level;
-	public int rectangleSize = 50;
+	private static final int RECTANGLESIZE= 25;
 	Random random;
 	// [Reihe][spalte][0 = Oben, 1 = Rechts, 2 = Unten, 3 = Links];
 	public static int[][][] levelRoomDoors;
@@ -44,36 +44,36 @@ public class WoodenForest implements DungeonState {
 			if (levelRoomDoors[i][f][d] == 1) {
 				if (d == 0) {// Oben
 					int doorY = 0;
-					int xLength = dungeon.dungeonWidth - (rectangleSize * 3);
+					int xLength = dungeon.dungeonWidth - (RECTANGLESIZE * 3);
 					int doorX = 0 + (int) (Math.random() * ((xLength - 0) + 1));
-					while (doorX % rectangleSize != 0) {
+					while (doorX % RECTANGLESIZE != 0) {
 						doorX++;
 					}
-					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, rectangleSize, rectangleSize));
+					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
 				} else if (d == 1) { // Rechts
-					int doorX = dungeon.dungeonWidth - rectangleSize;
-					int yLength = dungeon.dungeonHeight - (rectangleSize * 3);
+					int doorX = dungeon.dungeonWidth - RECTANGLESIZE;
+					int yLength = dungeon.dungeonHeight - (RECTANGLESIZE * 3);
 					int doorY = 0 + (int) (Math.random() * ((yLength - 0) + 1));
-					while (doorY % rectangleSize != 0) {
+					while (doorY % RECTANGLESIZE != 0) {
 						doorY++;
 					}
-					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, rectangleSize, rectangleSize));
+					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
 				} else if (d == 2) { // Unten
-					int doorY = dungeon.dungeonHeight - rectangleSize;
-					int xLength = dungeon.dungeonWidth - (rectangleSize * 3);
+					int doorY = dungeon.dungeonHeight - RECTANGLESIZE;
+					int xLength = dungeon.dungeonWidth - (RECTANGLESIZE * 3);
 					int doorX = 0 + (int) (Math.random() * ((xLength - 0) + 1));
-					while (doorX % rectangleSize != 0) {
+					while (doorX % RECTANGLESIZE != 0) {
 						doorX++;
 					}
-					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, rectangleSize, rectangleSize));
+					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
 				} else if (d == 3) { // links
 					int doorX = 0;
-					int yLength = dungeon.dungeonHeight - (rectangleSize * 3);
+					int yLength = dungeon.dungeonHeight - (RECTANGLESIZE * 3);
 					int doorY = 0 + (int) (Math.random() * ((yLength - 0) + 1));
-					while (doorY % rectangleSize != 0) {
+					while (doorY % RECTANGLESIZE != 0) {
 						doorY++;
 					}
-					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, rectangleSize, rectangleSize));
+					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
 				}
 			}
 		}
@@ -236,29 +236,29 @@ public class WoodenForest implements DungeonState {
 		x = 0;
 		y = 0;
 		while (x < dungeon.dungeonWidth) {
-			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, rectangleSize, rectangleSize));
-			x += rectangleSize;
+			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
+			x += RECTANGLESIZE;
 		}
 		// LeftWalls
 		x = 0;
-		y = rectangleSize;
-		while (y < (dungeon.dungeonHeight - rectangleSize)) {
-			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, rectangleSize, rectangleSize));
-			y += rectangleSize;
+		y = RECTANGLESIZE;
+		while (y < (dungeon.dungeonHeight - RECTANGLESIZE)) {
+			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
+			y += RECTANGLESIZE;
 		}
 		// BottomWalls
 		x = 0;
-		y = dungeon.dungeonHeight - rectangleSize;
+		y = dungeon.dungeonHeight - RECTANGLESIZE;
 		while (x < dungeon.dungeonWidth) {
-			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, rectangleSize, rectangleSize));
-			x += rectangleSize;
+			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
+			x += RECTANGLESIZE;
 		}
 		// RightWalls
-		x = dungeon.dungeonWidth - rectangleSize;
-		y = rectangleSize;
-		while (y < (dungeon.dungeonHeight - rectangleSize)) {
-			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, rectangleSize, rectangleSize));
-			y += rectangleSize;
+		x = dungeon.dungeonWidth - RECTANGLESIZE;
+		y = RECTANGLESIZE;
+		while (y < (dungeon.dungeonHeight - RECTANGLESIZE)) {
+			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
+			y += RECTANGLESIZE;
 		}
 	}
 
