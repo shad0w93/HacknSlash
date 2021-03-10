@@ -9,7 +9,7 @@ import org.w3c.dom.css.Rect;
 
 public class WoodenForest implements DungeonState {
 	public int level;
-	private static final int RECTANGLESIZE= 25;
+	private static final int RECTANGLESIZE= 50;
 	Random random;
 	// [Reihe][spalte][0 = Oben, 1 = Rechts, 2 = Unten, 3 = Links];
 	public static int[][][] levelRoomDoors;
