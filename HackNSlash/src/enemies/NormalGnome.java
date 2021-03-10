@@ -1,16 +1,15 @@
 package enemies;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
 
 import hackNSlay.EnemyState;
 
 public class NormalGnome implements EnemyState {
-	boolean test = false; // false = nach X laufen; true = nach Y laufen;
+	private boolean direction = false; // false = nach X laufen; true = nach Y laufen;
+	private float playerPosX = 1000; //TODO: Ersetzen mit character rectangle pos
+	private float playerPosY = 1000; //TODO: Ersetzen mit character rectangle pos
+	private int stepValue = 5;	// Fortbewegungsgeschwindigkeit
+	private int movementMargin = 100; // Ändert den Abstand zwischen Player & Gnome X und Y zur Positionsveränderung
 
 	public NormalGnome(Gnome gnome) {
 		gnome.xPos = 100;
@@ -22,23 +21,16 @@ public class NormalGnome implements EnemyState {
 
 	@Override
 	public void movementAction(Gnome gnome) {
-
-		boolean playerReached = false;
-		float playerPosX = 1000;
-		float playerPosY = 1000;
-		int stepValue = 5;
-		// p = 105 g = 100
-
-		if (!test) {
-			if (gnome.xPos > (playerPosX - 10) && gnome.xPos < (playerPosX + 10)) {
-				test = true;
+		if (!direction) {
+			if (gnome.xPos > (playerPosX - movementMargin) && gnome.xPos < (playerPosX + movementMargin)) {
+				direction = true;
 				moveUpDown(gnome);
 			} else {
 				moveLeftRight(gnome);
 			}
 		} else {
-			if (gnome.yPos > (playerPosY - 10) && gnome.yPos < (playerPosY + 10)) {
-				test = false;
+			if (gnome.yPos > (playerPosY - movementMargin) && gnome.yPos < (playerPosY + movementMargin)) {
+				direction = false;
 				moveLeftRight(gnome);
 			} else {
 				moveUpDown(gnome);
@@ -47,10 +39,6 @@ public class NormalGnome implements EnemyState {
 	}
 
 	public void moveLeftRight(Gnome gnome) {
-		float playerPosX = 1000;
-		float playerPosY = 1000;
-		int stepValue = 5;
-
 		if (playerPosX > gnome.xPos) {
 			gnome.xPos = gnome.xPos + stepValue;
 			gnome.circle.setCenterX(gnome.xPos);
@@ -61,10 +49,6 @@ public class NormalGnome implements EnemyState {
 	}
 
 	public void moveUpDown(Gnome gnome) {
-		float playerPosX = 1000;
-		float playerPosY = 1000;
-		int stepValue = 5;
-
 		if (playerPosY > gnome.yPos) {
 			gnome.yPos = gnome.yPos + stepValue;
 			gnome.circle.setCenterY(gnome.yPos);

@@ -13,6 +13,8 @@ public class Gnome extends Enemy{
 	
 	public Gnome() {
 		this.gnomeState = new NormalGnome(this);
+		this.gnomeState = new HardGnome(this);
+		//this.gnomeState = new EasyGnome(this);
 	}
 	public void render(GameContainer container, Graphics g) throws SlickException{
 		g.setColor(Color.red);
