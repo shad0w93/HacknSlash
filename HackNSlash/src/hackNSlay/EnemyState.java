@@ -7,5 +7,5 @@ import org.newdawn.slick.SlickException;
 import enemies.Gnome;
 
 public interface EnemyState{
-	public void movementAction(Gnome gnom);
+	public void movementAction(Gnome gnom, int delta);
 }

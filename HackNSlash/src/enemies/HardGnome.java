@@ -20,7 +20,7 @@ public class HardGnome implements EnemyState {
 	}
 
 	@Override
-	public void movementAction(Gnome gnome) {
+	public void movementAction(Gnome gnome, int time) {
 		if (!direction) {
 			if (gnome.xPos > (playerPosX - movementMargin) && gnome.xPos < (playerPosX + movementMargin)) {
 				direction = true;

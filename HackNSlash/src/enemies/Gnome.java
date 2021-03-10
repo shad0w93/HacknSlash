@@ -14,13 +14,13 @@ public class Gnome extends Enemy{
 	public Gnome() {
 		this.gnomeState = new NormalGnome(this);
 		this.gnomeState = new HardGnome(this);
-		//this.gnomeState = new EasyGnome(this);
+		this.gnomeState = new EasyGnome(this);
 	}
 	public void render(GameContainer container, Graphics g) throws SlickException{
 		g.setColor(Color.red);
 		g.fill(circle);
 	};
 	public void update(GameContainer container, int delta) throws SlickException{
-		gnomeState.movementAction(this);
+		gnomeState.movementAction(this, delta);
 	};
 }

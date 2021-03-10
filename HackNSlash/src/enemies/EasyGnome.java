@@ -14,8 +14,8 @@ public class EasyGnome implements EnemyState {
 	private int stepValue = 5; // Fortbewegungsgeschwindigkeit
 	private Random random;
 	int counter;
-	private int counterLeft;
-	private int counterRight;
+	int runningTime;
+	int moveDirection;
 	private float xGame = 1000;
 	private float yGame = 1000;
 
@@ -25,40 +25,56 @@ public class EasyGnome implements EnemyState {
 		gnome.circleRadius = 30;
 		gnome.circle = new Circle(gnome.xPos, gnome.yPos, gnome.circleRadius);
 		gnome.name = "Bob";
+		runningTime = 0;
+		moveDirection[][] = changeDirection();
 	}
 
 	@Override
-	public void movementAction(Gnome gnome) {
+	public void movementAction(Gnome gnome, int time) {
 		random = new Random();
 		
-		if (!direction) {
+		runningTime += time;
+	
+		if (runningTime >= 2000) {
+			moveDirection = changeDirection();
+		} else {
+			
+		}
+		counter++;
+		
+		
+		
+		
+		if (counter <= 10) {
 			direction = true;
+		} else {
+			counter = 0;
+			direction = false;
+		}
+
+		if (direction) {
 			moveUpDown(gnome);
 		} else {
 			moveLeftRight(gnome);
 		}
+
+	}
+
+	private int changeDirection() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public void moveLeftRight(Gnome gnome) {
-		if (counter > 10) {
-		gnome.xPos = gnome.xPos - stepValue;
-		counter = 0;
-		}
-		else {
+
 		gnome.xPos = gnome.xPos + stepValue;
-		}
+
 		gnome.circle.setCenterX(gnome.xPos);
 	}
 
 	public void moveUpDown(Gnome gnome) {
-		if (gnome.circle.getCenterY() <= yGame - stepValue && gnome.circle.getCenterY() >= 0 + stepValue) {
-			direction = random.nextBoolean();
-			if (!direction) {
-				gnome.yPos += stepValue;
-			} else {
-				gnome.yPos -= stepValue;
-			}
-			gnome.circle.setCenterY(gnome.yPos);
-		}
+		gnome.yPos = gnome.yPos + stepValue;
+
+		gnome.circle.setCenterY(gnome.yPos);
 	}
 }
