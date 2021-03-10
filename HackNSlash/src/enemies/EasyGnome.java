@@ -15,66 +15,59 @@ public class EasyGnome implements EnemyState {
 	private Random random;
 	int counter;
 	int runningTime;
-	int moveDirection;
-	private float xGame = 1000;
-	private float yGame = 1000;
+	int nextStep;
+	int moveDirectionXY[];
+
 
 	public EasyGnome(Gnome gnome) {
+		random = new Random();
 		gnome.xPos = 100;
 		gnome.yPos = 100;
 		gnome.circleRadius = 30;
 		gnome.circle = new Circle(gnome.xPos, gnome.yPos, gnome.circleRadius);
 		gnome.name = "Bob";
 		runningTime = 0;
-		moveDirection[][] = changeDirection();
+		nextStep = 0;
+		moveDirectionXY = new int[2];
+		moveDirectionXY = changeDirection();
 	}
 
 	@Override
 	public void movementAction(Gnome gnome, int time) {
-		random = new Random();
-		
 		runningTime += time;
-	
-		if (runningTime >= 2000) {
-			moveDirection = changeDirection();
-		} else {
-			
-		}
-		counter++;
-		
-		
-		
-		
-		if (counter <= 10) {
-			direction = true;
-		} else {
-			counter = 0;
-			direction = false;
-		}
+		nextStep += time;
 
-		if (direction) {
-			moveUpDown(gnome);
-		} else {
-			moveLeftRight(gnome);
+		if (runningTime >= 1000) {
+			runningTime = 0;
+			nextStep = 0;
+			moveDirectionXY = changeDirection();
+		} else if (nextStep >= 30){
+			nextStep = 0;
+			gnome.xPos = gnome.xPos + moveDirectionXY[0];
+			gnome.yPos = gnome.yPos + moveDirectionXY[1];
+			gnome.circle.setCenterX(gnome.xPos);
+			gnome.circle.setCenterY(gnome.yPos);
 		}
 
 	}
 
-	private int changeDirection() {
-		// TODO Auto-generated method stub
-		
+	private int[] changeDirection() {
+		int xY[] = new int[2];
+		int direction = random.nextInt(4);
+		if (direction == 0) {
+			xY[0] = 0;
+			xY[1] = stepValue;
+		} else if (direction == 1) {
+			xY[0] = stepValue;
+			xY[1] = 0;
+		} else if (direction == 2) {
+			xY[0] = 0;
+			xY[1] = 0 - stepValue;
+		} else if (direction == 3) {
+			xY[0] = 0 - stepValue;
+			xY[1] = 0;
+		}
+		return xY;
 	}
 
-	public void moveLeftRight(Gnome gnome) {
-
-		gnome.xPos = gnome.xPos + stepValue;
-
-		gnome.circle.setCenterX(gnome.xPos);
-	}
-
-	public void moveUpDown(Gnome gnome) {
-		gnome.yPos = gnome.yPos + stepValue;
-
-		gnome.circle.setCenterY(gnome.yPos);
-	}
 }

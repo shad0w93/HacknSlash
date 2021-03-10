@@ -18,9 +18,9 @@ public class NormalGnome implements EnemyState {
 		gnome.circle = new Circle(gnome.xPos, gnome.yPos, gnome.circleRadius);
 		gnome.name = "Brian";
 	}
-
+	
 	@Override
-	public void movementAction(Gnome gnome) {
+	public void movementAction(Gnome gnome, int time) {
 		if (!direction) {
 			if (gnome.xPos > (playerPosX - movementMargin) && gnome.xPos < (playerPosX + movementMargin)) {
 				direction = true;
@@ -57,4 +57,5 @@ public class NormalGnome implements EnemyState {
 			gnome.circle.setCenterY(gnome.yPos);
 		}
 	}
+
 }
