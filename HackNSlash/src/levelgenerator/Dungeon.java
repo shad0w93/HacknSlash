@@ -75,5 +75,8 @@ public class Dungeon {
 				levelPositionX--;
 			}
 		}
+		if (input.isKeyPressed(Input.KEY_L)) {
+			dungeonState.newDungeonLevel(this);
+		}
 	};
 }
