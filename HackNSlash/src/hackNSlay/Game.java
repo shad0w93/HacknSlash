@@ -4,6 +4,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
 import levelgenerator.*;
+import enemies.*;
 
 public class Game extends BasicGame {
 
@@ -14,9 +15,11 @@ public class Game extends BasicGame {
     private int mainGameWidth;
     private int mainGameHeigth;
     public Dungeon dungeon;
+    Gnome gnom;
 
     public Game() {
-        super("Hack´n´Slash");
+        super("Hackï¿½nï¿½Slash");
+        gnom = new Gnome();
     }
 
     public static void main(String[] args) throws SlickException {
@@ -30,6 +33,7 @@ public class Game extends BasicGame {
         g.setColor(Color.darkGray);
         g.fill(mainGame);
         dungeon.render(container, g);
+        gnom.render(container, g);
     }
 
     @Override
@@ -47,6 +51,7 @@ public class Game extends BasicGame {
             container.exit();
         }
         dungeon.update(container, delta);
+        gnom.update(container, delta);
         }
 
     public void setGameField(GameContainer container) {
@@ -55,5 +60,6 @@ public class Game extends BasicGame {
         mainGameWidth = container.getWidth()-(container.getWidth()/3);
         mainGameHeigth = 1000;
         mainGame = new Rectangle(xMainGame,yMainGame,mainGameWidth,mainGameHeigth);
+        gnom = new Gnome();
     }
 }
