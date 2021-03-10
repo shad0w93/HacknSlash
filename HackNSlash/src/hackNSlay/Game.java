@@ -1,5 +1,7 @@
 package hackNSlay;
 
+import java.util.concurrent.TimeUnit;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
@@ -9,6 +11,11 @@ public class Game extends BasicGame {
     private Rectangle mainGame;
     private int xMainGame;
     private int yMainGame;
+    
+    private Wizard playerWizard;
+    
+    private Shape wizardShape;
+    private Shape spell;
 
     public Game() {
         super("Hack´n´Slash");
@@ -24,6 +31,10 @@ public class Game extends BasicGame {
     public void render(GameContainer container, Graphics g) throws SlickException {
         g.setColor(Color.darkGray);
         g.fill(mainGame);
+        g.setColor(Color.blue);
+        g.fill(wizardShape);
+        g.setColor(Color.green);
+        g.fill(spell);
     }
 
     @Override
@@ -32,6 +43,14 @@ public class Game extends BasicGame {
         setGameField();
         container.setMinimumLogicUpdateInterval(5);
         container.setMaximumLogicUpdateInterval(5);
+        playerWizard = new Wizard("Mag");
+        playerWizard.setxPos(500);
+        playerWizard.setyPos(300);
+        playerWizard.setSize(40);
+        playerWizard.setVelocity(20);;
+        wizardShape = new Circle(playerWizard.getxPos(), playerWizard.getyPos(), playerWizard.getSize());
+        spell = new Circle(playerWizard.getxPos(), playerWizard.getyPos(), 20);
+        
 
     }
 
@@ -40,6 +59,38 @@ public class Game extends BasicGame {
         if (input.isKeyPressed(Input.KEY_ESCAPE)) {
             container.exit();
         }
+        
+        //wizardShape.setLocation(100, 100);
+        
+        if (container.getInput().isKeyPressed(Input.KEY_RIGHT)) {
+        	spell.setCenterX(wizardShape.getCenterX() + playerWizard.getVelocity());
+        	wizardShape.setCenterX(wizardShape.getCenterX() + playerWizard.getVelocity());
+		}
+        if (container.getInput().isKeyPressed(Input.KEY_LEFT)) {
+        	spell.setCenterX(wizardShape.getCenterX() - playerWizard.getVelocity());
+        	wizardShape.setCenterX(wizardShape.getCenterX() - playerWizard.getVelocity());
+		}
+        if (container.getInput().isKeyPressed(Input.KEY_UP)) {
+        	spell.setCenterY(wizardShape.getCenterY() - playerWizard.getVelocity());
+        	wizardShape.setCenterY(wizardShape.getCenterY() - playerWizard.getVelocity());
+		}
+        if (container.getInput().isKeyPressed(Input.KEY_DOWN)) {
+        	spell.setCenterY(wizardShape.getCenterY() + playerWizard.getVelocity());
+        	wizardShape.setCenterY(wizardShape.getCenterY() + playerWizard.getVelocity());
+		}
+        
+        
+        if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+        	
+        	
+        	while (spell.getCenterX()<1000) {
+        		spell.setCenterX(spell.getCenterX()+1);
+        		
+			}
+        	
+		}
+        
+        
     }
 
     public void setGameField() {
