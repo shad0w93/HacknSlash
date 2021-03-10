@@ -14,7 +14,7 @@ public class Game extends BasicGame {
 	Gnome gnom;
 
 	public Game() {
-		super("Hack´n´Slash");
+		super("Hackï¿½nï¿½Slash");
 		gnom = new Gnome();
 	}
 
