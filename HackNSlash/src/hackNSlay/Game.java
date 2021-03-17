@@ -1,8 +1,11 @@
 package hackNSlay;
 
+import java.util.concurrent.TimeUnit;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
+import levelgenerator.*;
 import enemies.*;
 
 public class Game extends BasicGame {
@@ -11,11 +14,17 @@ public class Game extends BasicGame {
 	private Rectangle mainGame;
 	private int xMainGame;
 	private int yMainGame;
-	Gnom gnom;
+	private Wizard playerWizard;
+	private Shape wizardShape;
+	private Shape spell;
+	private int mainGameWidth;
+	private int mainGameHeigth;
+	public Dungeon dungeon;
+	Gnome gnom;
 
 	public Game() {
-		super("Hack´n´Slash");
-		gnom = new Gnom();
+		super("Hackï¿½nï¿½Slash");
+		gnom = new Gnome();
 	}
 
 	public static void main(String[] args) throws SlickException {
@@ -28,15 +37,32 @@ public class Game extends BasicGame {
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.setColor(Color.darkGray);
 		g.fill(mainGame);
+
+		g.setColor(Color.blue);
+		g.fill(wizardShape);
+		g.setColor(Color.green);
+		g.fill(spell);
+
+		dungeon.render(container, g);
 		gnom.render(container, g);
 	}
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
 		input = container.getInput();
-		setGameField();
+
+		setGameField(container);
 		container.setMinimumLogicUpdateInterval(5);
 		container.setMaximumLogicUpdateInterval(5);
+		dungeon = new Dungeon(mainGameWidth, mainGameHeigth);
+		playerWizard = new Wizard("Mag");
+		playerWizard.setxPos(500);
+		playerWizard.setyPos(300);
+		playerWizard.setSize(40);
+		playerWizard.setVelocity(20);
+		;
+		wizardShape = new Circle(playerWizard.getxPos(), playerWizard.getyPos(), playerWizard.getSize());
+		spell = new Circle(playerWizard.getxPos(), playerWizard.getyPos(), 20);
 	}
 
 	@Override
@@ -44,14 +70,45 @@ public class Game extends BasicGame {
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			container.exit();
 		}
-		gnom.update(container, delta);
+
+		// wizardShape.setLocation(100, 100);
+
+		if (container.getInput().isKeyPressed(Input.KEY_RIGHT)) {
+			spell.setCenterX(wizardShape.getCenterX() + playerWizard.getVelocity());
+			wizardShape.setCenterX(wizardShape.getCenterX() + playerWizard.getVelocity());
+		}
+		if (container.getInput().isKeyPressed(Input.KEY_LEFT)) {
+			spell.setCenterX(wizardShape.getCenterX() - playerWizard.getVelocity());
+			wizardShape.setCenterX(wizardShape.getCenterX() - playerWizard.getVelocity());
+		}
+		if (container.getInput().isKeyPressed(Input.KEY_UP)) {
+			spell.setCenterY(wizardShape.getCenterY() - playerWizard.getVelocity());
+			wizardShape.setCenterY(wizardShape.getCenterY() - playerWizard.getVelocity());
+		}
+		if (container.getInput().isKeyPressed(Input.KEY_DOWN)) {
+			spell.setCenterY(wizardShape.getCenterY() + playerWizard.getVelocity());
+			wizardShape.setCenterY(wizardShape.getCenterY() + playerWizard.getVelocity());
+		}
+
+		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+
+			while (spell.getCenterX() < 1000) {
+				spell.setCenterX(spell.getCenterX() + 1);
+			}
+
+		}
+		
+		dungeon.update(container, delta, input, wizardShape);
+		gnom.update(container, delta, wizardShape.getCenterX(), wizardShape.getCenterY());
+
 	}
 
-	public void setGameField() {
+	public void setGameField(GameContainer container) {
 		xMainGame = 0;
 		yMainGame = 0;
-		mainGame = new Rectangle(xMainGame,yMainGame,1000,1000);
-		gnom = new Gnom();
-
+		mainGameWidth = container.getWidth() - (container.getWidth() / 3);
+		mainGameHeigth = 1000;
+		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeigth);
+		gnom = new Gnome();
 	}
 }
