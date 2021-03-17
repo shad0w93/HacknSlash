@@ -54,10 +54,6 @@ public class Game extends BasicGame {
 		setGameField(container);
 		container.setMinimumLogicUpdateInterval(5);
 		container.setMaximumLogicUpdateInterval(5);
-
-		setGameField(container);
-		container.setMinimumLogicUpdateInterval(5);
-		container.setMaximumLogicUpdateInterval(5);
 		dungeon = new Dungeon(mainGameWidth, mainGameHeigth);
 		playerWizard = new Wizard("Mag");
 		playerWizard.setxPos(500);
@@ -101,7 +97,8 @@ public class Game extends BasicGame {
 			}
 
 		}
-		dungeon.update(container, delta, input);
+		
+		dungeon.update(container, delta, input, wizardShape);
 		gnom.update(container, delta, wizardShape.getCenterX(), wizardShape.getCenterY());
 
 	}

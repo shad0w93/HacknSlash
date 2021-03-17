@@ -9,7 +9,7 @@ import org.w3c.dom.css.Rect;
 
 public class WoodenForest implements DungeonState {
 	public int level;
-	private static final int RECTANGLESIZE= 50;
+	private static final int RECTANGLESIZE = 50;
 	Random random;
 	// [Reihe][spalte][0 = Oben, 1 = Rechts, 2 = Unten, 3 = Links];
 	public static int[][][] levelRoomDoors;
@@ -17,81 +17,79 @@ public class WoodenForest implements DungeonState {
 	public WoodenForest(Dungeon dungeon) {
 		random = new Random();
 		levelRoomDoors = new int[dungeon.walls.length][dungeon.walls[0].length][4];
-		drawField(dungeon);
+		newDungeonLevel(dungeon);
+		spawnMobs(dungeon);
+
+	}
+
+	public void newDungeonLevel(Dungeon dungeon) {
+		// destroyAllWallsAndDoors(dungeon);
+		destroyAllWallsAndDoors(dungeon);
+		levelRoomDoors = new int[dungeon.walls.length][dungeon.walls[0].length][4];
 		for (int xWalls = 0; xWalls < dungeon.walls.length; xWalls++) {
 			for (int yWalls = 0; yWalls < dungeon.walls[xWalls].length; yWalls++) {
 				buildWalls(dungeon, xWalls, yWalls);
 			}
 		}
-
-		// Hier wird nicht einfach nur durch das Array gegangen das hier immer nach
-		// einer anderen Logik die T¸ren generiert werden
+		// Die T¸ren werden je nach Dungeonart auf eine andere Art generiert
 		generateDoors(dungeon);
 		for (int xWalls = 0; xWalls < dungeon.walls.length; xWalls++) {
 			for (int yWalls = 0; yWalls < dungeon.walls[xWalls].length; yWalls++) {
 				setRoomDoors(dungeon, xWalls, yWalls);
 			}
 		}
-		generateMobs(dungeon);
 	}
 
-	public void drawField(Dungeon dungeon) {
-
-	}
-
-	public void setRoomDoors(Dungeon dungeon, int i, int f) {
-		for (int d = 0; d < levelRoomDoors[0][0].length; d++) {
-			if (levelRoomDoors[i][f][d] == 1) {
-				if (d == 0) {// Oben
-					int doorY = 0;
-					int xLength = dungeon.dungeonWidth - (RECTANGLESIZE * 3);
-					int doorX = 0 + (int) (Math.random() * ((xLength - 0) + 1));
-					while (doorX % RECTANGLESIZE != 0) {
-						doorX++;
+	private void destroyAllWallsAndDoors(Dungeon dungeon) {
+		for (int x = 0; x < dungeon.doors.length; x++) {
+			for (int y = 0; y < dungeon.doors.length; y++) {
+				for (int direction = 0; direction < 4; direction++) {
+					for (int i = dungeon.walls[x][y][direction].size() - 1; i >= 0; i--) {
+						dungeon.walls[x][y][direction].remove(i);
 					}
-					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
-				} else if (d == 1) { // Rechts
-					int doorX = dungeon.dungeonWidth - RECTANGLESIZE;
-					int yLength = dungeon.dungeonHeight - (RECTANGLESIZE * 3);
-					int doorY = 0 + (int) (Math.random() * ((yLength - 0) + 1));
-					while (doorY % RECTANGLESIZE != 0) {
-						doorY++;
+					for (int i = dungeon.doors[x][y][direction].size() - 1; i >= 0; i--) {
+						dungeon.doors[x][y][direction].remove(i);
 					}
-					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
-				} else if (d == 2) { // Unten
-					int doorY = dungeon.dungeonHeight - RECTANGLESIZE;
-					int xLength = dungeon.dungeonWidth - (RECTANGLESIZE * 3);
-					int doorX = 0 + (int) (Math.random() * ((xLength - 0) + 1));
-					while (doorX % RECTANGLESIZE != 0) {
-						doorX++;
-					}
-					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
-				} else if (d == 3) { // links
-					int doorX = 0;
-					int yLength = dungeon.dungeonHeight - (RECTANGLESIZE * 3);
-					int doorY = 0 + (int) (Math.random() * ((yLength - 0) + 1));
-					while (doorY % RECTANGLESIZE != 0) {
-						doorY++;
-					}
-					dungeon.doors[i][f].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
-				}
-			}
-		}
-		destroyWallWhereTheDoorsAre(dungeon, i, f);
-	}
-
-	public void destroyWallWhereTheDoorsAre(Dungeon dungeon, int roomX, int roomY) {
-		for (Rectangle rectangle : dungeon.doors[roomX][roomY]) {
-			for (int i = dungeon.walls[roomX][roomY].size() - 1; i >= 0; i--) {
-				Rectangle c = dungeon.walls[roomX][roomY].get(i);
-				if (c.getCenterX() == rectangle.getCenterX() && c.getCenterY() == rectangle.getCenterY()) {
-					dungeon.walls[roomX][roomY].remove(i);
 				}
 			}
 		}
 	}
-
-	@Override
+	
+	//Setzt in jeden Raum auﬂenrum W‰nde
+	public void buildWalls(Dungeon dungeon, int roomX, int roomY) {
+		int x;
+		int y;
+		// TopWalls
+		x = 0;
+		y = 0;
+		while (x < dungeon.dungeonWidth) {
+			dungeon.walls[roomX][roomY][0].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
+			x += RECTANGLESIZE;
+		}
+		// LeftWalls
+		x = 0;
+		y = RECTANGLESIZE;
+		while (y < (dungeon.dungeonHeight - RECTANGLESIZE)) {
+			dungeon.walls[roomX][roomY][3].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
+			y += RECTANGLESIZE;
+		}
+		// BottomWalls
+		x = 0;
+		y = dungeon.dungeonHeight - RECTANGLESIZE;
+		while (x < dungeon.dungeonWidth) {
+			dungeon.walls[roomX][roomY][2].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
+			x += RECTANGLESIZE;
+		}
+		// RightWalls
+		x = dungeon.dungeonWidth - RECTANGLESIZE;
+		y = RECTANGLESIZE;
+		while (y < (dungeon.dungeonHeight - RECTANGLESIZE)) {
+			dungeon.walls[roomX][roomY][1].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
+			y += RECTANGLESIZE;
+		}
+	}
+	
+	//Bestimmt die Reihenfolge welcher Raum zuerst die T¸ren bekommt und welcher zuletzt.
 	public void generateDoors(Dungeon dungeon) {
 		int middleX = levelRoomDoors.length / 2;
 		int middleY = levelRoomDoors[0].length / 2;
@@ -126,7 +124,6 @@ public class WoodenForest implements DungeonState {
 			generateRoomDoors(dungeon, middleX, middleY);
 			middleY -= 1;
 		}
-
 		// Jetzt nach Rechts und dort immer nach oben und unten
 		middleY = tempSaveMiddleY;
 		int tempSaveMiddleX = middleX;
@@ -145,7 +142,6 @@ public class WoodenForest implements DungeonState {
 			}
 			middleX += 1;
 		}
-
 		// Zuletzt das selbe noch nach Links
 		middleX = tempSaveMiddleX;
 		middleY = tempSaveMiddleY;
@@ -164,9 +160,9 @@ public class WoodenForest implements DungeonState {
 			}
 			middleX -= 1;
 		}
-
 	}
-
+	
+	//Bestimmt die T¸ren zu einem raum von generateDoors()
 	public void generateRoomDoors(Dungeon dungeon, int roomX, int roomY) {
 		int[] roomsAroundX = { roomX, roomX + 1, roomX, roomX - 1 };
 		int[] roomsAroundY = { roomY + 1, roomY, roomY - 1, roomY };
@@ -227,76 +223,77 @@ public class WoodenForest implements DungeonState {
 			}
 		}
 	}
-
-	@Override
-	public void buildWalls(Dungeon dungeon, int roomX, int roomY) {
-		int x;
-		int y;
-		// TopWalls
-		x = 0;
-		y = 0;
-		while (x < dungeon.dungeonWidth) {
-			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
-			x += RECTANGLESIZE;
+	
+	//Erstellt die jeweiligen T¸ren von generateRoomDoors()
+	public void setRoomDoors(Dungeon dungeon, int i, int f) {
+		for (int d = 0; d < levelRoomDoors[0][0].length; d++) {
+			if (levelRoomDoors[i][f][d] == 1) {
+				if (d == 0) {// Oben
+					int doorY = 0;
+					int xLength = dungeon.dungeonWidth - (RECTANGLESIZE * 3);
+					int doorX = 0 + (int) (Math.random() * ((xLength - 0) + 1));
+					while (doorX % RECTANGLESIZE != 0) {
+						doorX++;
+					}
+					dungeon.doors[i][f][d].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
+					dungeon.doors[i][f][d]
+							.add(new Rectangle((doorX + RECTANGLESIZE), doorY, RECTANGLESIZE, RECTANGLESIZE));
+				} else if (d == 1) { // Rechts
+					int doorX = dungeon.dungeonWidth - RECTANGLESIZE;
+					int yLength = dungeon.dungeonHeight - (RECTANGLESIZE * 3);
+					int doorY = 0 + (int) (Math.random() * ((yLength - 0) + 1));
+					while (doorY % RECTANGLESIZE != 0) {
+						doorY++;
+					}
+					dungeon.doors[i][f][d].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
+					dungeon.doors[i][f][d]
+							.add(new Rectangle(doorX, (doorY + RECTANGLESIZE), RECTANGLESIZE, RECTANGLESIZE));
+				} else if (d == 2) { // Unten
+					int doorY = dungeon.dungeonHeight - RECTANGLESIZE;
+					int xLength = dungeon.dungeonWidth - (RECTANGLESIZE * 3);
+					int doorX = 0 + (int) (Math.random() * ((xLength - 0) + 1));
+					while (doorX % RECTANGLESIZE != 0) {
+						doorX++;
+					}
+					dungeon.doors[i][f][d].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
+					dungeon.doors[i][f][d]
+							.add(new Rectangle((doorX + RECTANGLESIZE), doorY, RECTANGLESIZE, RECTANGLESIZE));
+				} else if (d == 3) { // links
+					int doorX = 0;
+					int yLength = dungeon.dungeonHeight - (RECTANGLESIZE * 3);
+					int doorY = 0 + (int) (Math.random() * ((yLength - 0) + 1));
+					while (doorY % RECTANGLESIZE != 0) {
+						doorY++;
+					}
+					dungeon.doors[i][f][d].add(new Rectangle(doorX, doorY, RECTANGLESIZE, RECTANGLESIZE));
+					dungeon.doors[i][f][d]
+							.add(new Rectangle(doorX, (doorY + RECTANGLESIZE), RECTANGLESIZE, RECTANGLESIZE));
+				}
+			}
 		}
-		// LeftWalls
-		x = 0;
-		y = RECTANGLESIZE;
-		while (y < (dungeon.dungeonHeight - RECTANGLESIZE)) {
-			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
-			y += RECTANGLESIZE;
-		}
-		// BottomWalls
-		x = 0;
-		y = dungeon.dungeonHeight - RECTANGLESIZE;
-		while (x < dungeon.dungeonWidth) {
-			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
-			x += RECTANGLESIZE;
-		}
-		// RightWalls
-		x = dungeon.dungeonWidth - RECTANGLESIZE;
-		y = RECTANGLESIZE;
-		while (y < (dungeon.dungeonHeight - RECTANGLESIZE)) {
-			dungeon.walls[roomX][roomY].add(new Rectangle(x, y, RECTANGLESIZE, RECTANGLESIZE));
-			y += RECTANGLESIZE;
-		}
+		destroyWallWhereTheDoorsAre(dungeon, i, f);
 	}
 
+	//Lˆscht die jeweiligen W‰nde wo jetzt T¸ren sind (von den jeweils mitgegebenen Raum
+	public void destroyWallWhereTheDoorsAre(Dungeon dungeon, int roomX, int roomY) {
+		for (int direction = 0; direction < 4; direction++) {
+			for (Rectangle rectangle : dungeon.doors[roomX][roomY][direction]) {
+				for (int i = dungeon.walls[roomX][roomY][direction].size() - 1; i >= 0; i--) {
+					Rectangle c = dungeon.walls[roomX][roomY][direction].get(i);
+					if (c.getCenterX() == rectangle.getCenterX() && c.getCenterY() == rectangle.getCenterY()) {
+						dungeon.walls[roomX][roomY][direction].remove(i);
+					}
+				}
+			}
+		}
+	}
+	
 	@Override
-	public void generateMobs(Dungeon dungeon) {
+	public void spawnMobs(Dungeon dungeon) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void newDungeonLevel(Dungeon dungeon) {
-		destroyAllWallsAndDoors(dungeon);
-		levelRoomDoors = new int[dungeon.walls.length][dungeon.walls[0].length][4];
-		drawField(dungeon);
-		for (int xWalls = 0; xWalls < dungeon.walls.length; xWalls++) {
-			for (int yWalls = 0; yWalls < dungeon.walls[xWalls].length; yWalls++) {
-				buildWalls(dungeon, xWalls, yWalls);
-			}
-		}
-		// Die T¸ren werden je nach Dungeonart auf eine andere Art generiert
-		generateDoors(dungeon);
-		for (int xWalls = 0; xWalls < dungeon.walls.length; xWalls++) {
-			for (int yWalls = 0; yWalls < dungeon.walls[xWalls].length; yWalls++) {
-				setRoomDoors(dungeon, xWalls, yWalls);
-			}
-		}
-		generateMobs(dungeon);
-	}
-
-	private void destroyAllWallsAndDoors(Dungeon dungeon) {
-		for (int x = 0; x < dungeon.doors.length; x++) {
-			for (int y = 0; y < dungeon.doors.length; y++) {
-				for (int i = dungeon.walls[x][y].size() - 1; i >= 0; i--) {
-					dungeon.walls[x][y].remove(i);
-				}
-				for (int i = dungeon.doors[x][y].size() - 1; i >= 0; i--) {
-					dungeon.doors[x][y].remove(i);
-				}
-			}
-		}
-	}
+	
+	
 }

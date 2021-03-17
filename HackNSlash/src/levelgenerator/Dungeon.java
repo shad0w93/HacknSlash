@@ -22,22 +22,26 @@ public class Dungeon {
 	public int levelPositionX = 1;
 	public int levelPositionY = 1;
 	@SuppressWarnings("unchecked")
-	public ArrayList<Rectangle> walls[][];
-	public ArrayList<Rectangle> doors[][];
+	public ArrayList<Rectangle> walls[][][];
+	public ArrayList<Rectangle> doors[][][];
 
 	public Dungeon(int width, int height) {
-		walls = new ArrayList[maxXPosition][maxYPosition];
-		doors = new ArrayList[maxXPosition][maxYPosition];
+		walls = new ArrayList[maxXPosition][maxYPosition][4];
+		doors = new ArrayList[maxXPosition][maxYPosition][4];
 		dungeonWidth = width;
 		dungeonHeight = height;
 		for (int i = 0; i < walls.length; i++) {
 			for (int y = 0; y < walls[0].length; y++) {
-				walls[i][y] = new ArrayList<Rectangle>();
+				for (int direction = 0; direction < 4; direction++) {
+					walls[i][y][direction] = new ArrayList<Rectangle>();
+				}
 			}
 		}
 		for (int i = 0; i < walls.length; i++) {
 			for (int y = 0; y < walls[0].length; y++) {
-				doors[i][y] = new ArrayList<Rectangle>();
+				for (int direction = 0; direction < 4; direction++) {
+					doors[i][y][direction] = new ArrayList<Rectangle>();
+				}
 			}
 		}
 		dungeonState = new WoodenForest(this);
@@ -45,16 +49,25 @@ public class Dungeon {
 
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.setColor(Color.green);
-		for (Rectangle rectangle : walls[levelPositionX][levelPositionY]) {
-			g.fill(rectangle);
+		for (int direction = 0; direction < 4; direction++) {
+			for (Rectangle rectangle : walls[levelPositionX][levelPositionY][direction]) {
+				g.fill(rectangle);
+			}
 		}
 		/*
 		 * g.setColor(Color.blue); for (Rectangle rectangle : doors) {
 		 * g.fill(rectangle); }
 		 */
-	};
+	}
 
-	public void update(GameContainer container, int delta, Input input) throws SlickException {
+	public void update(GameContainer container, int delta, Input input, Shape character) throws SlickException {
+		checkForDoor(character);
+		if (container.getInput().isKeyPressed(Input.KEY_L)) {
+			dungeonState.newDungeonLevel(this);
+		}
+	}
 
-	};
+	public void checkForDoor(Shape character) {
+
+	}
 }
