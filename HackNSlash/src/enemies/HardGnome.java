@@ -2,12 +2,10 @@ package enemies;
 
 import org.newdawn.slick.geom.Circle;
 
-import hackNSlay.EnemyState;
-
 public class HardGnome implements EnemyState {
 	private boolean direction = false; // false = nach X laufen; true = nach Y laufen;
-	private float playerPosX = 1000; //TODO: Ersetzen mit character rectangle pos
-	private float playerPosY = 1000; //TODO: Ersetzen mit character rectangle pos
+	private float playerPosX; //TODO: Ersetzen mit character rectangle pos
+	private float playerPosY; //TODO: Ersetzen mit character rectangle pos
 	private int stepValue = 5;	// Fortbewegungsgeschwindigkeit
 	private int movementMargin = 500; // Ändert den Abstand zwischen Player & Gnome X und Y zur Positionsveränderung
 
@@ -17,10 +15,14 @@ public class HardGnome implements EnemyState {
 		gnome.circleRadius = 30;
 		gnome.circle = new Circle(gnome.xPos, gnome.yPos, gnome.circleRadius);
 		gnome.name = "Gizmo";
+		playerPosX = 0;
+		playerPosY = 0;
 	}
 
 	@Override
-	public void movementAction(Gnome gnome, int time) {
+	public void movementAction(Gnome gnome, int time, float x, float y) {
+		playerPosX = x;
+		playerPosY = y;
 		if (!direction) {
 			if (gnome.xPos > (playerPosX - movementMargin) && gnome.xPos < (playerPosX + movementMargin)) {
 				direction = true;

@@ -1,8 +1,12 @@
 package hackNSlay;
 
+import java.util.concurrent.TimeUnit;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
+import levelgenerator.*;
+import player.*;
 import enemies.*;
 
 public class Game extends BasicGame {
@@ -11,6 +15,11 @@ public class Game extends BasicGame {
 	private Rectangle mainGame;
 	private int xMainGame;
 	private int yMainGame;
+	private int mainGameWidth;
+	private int mainGameHeigth;
+	private Dungeon dungeon;
+	private Player player;
+
 	Gnome gnom;
 
 	public Game() {
@@ -28,15 +37,24 @@ public class Game extends BasicGame {
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.setColor(Color.darkGray);
 		g.fill(mainGame);
+
+		g.setColor(Color.green);
+		//g.fill(spell);
+		player.render(container, g);
+		dungeon.render(container, g);
 		gnom.render(container, g);
+		
 	}
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
 		input = container.getInput();
-		setGameField();
+		setGameField(container);
 		container.setMinimumLogicUpdateInterval(5);
 		container.setMaximumLogicUpdateInterval(5);
+		dungeon = new Dungeon(mainGameWidth, mainGameHeigth);
+		player = new Player();
+
 	}
 
 	@Override
@@ -44,14 +62,18 @@ public class Game extends BasicGame {
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			container.exit();
 		}
-		gnom.update(container, delta);
+		player.update(container, delta, input);
+		dungeon.update(container, delta, input, player.getplayerShape());
+		gnom.update(container, delta, player.getxPos(), player.getyPos());
+
 	}
 
-	public void setGameField() {
+	public void setGameField(GameContainer container) {
 		xMainGame = 0;
 		yMainGame = 0;
-		mainGame = new Rectangle(xMainGame,yMainGame,1000,1000);
+		mainGameWidth = container.getWidth() - (container.getWidth() / 3);
+		mainGameHeigth = 1000;
+		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeigth);
 		gnom = new Gnome();
-
 	}
 }

@@ -6,7 +6,6 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.AppletGameContainer.Container;
 import org.newdawn.slick.geom.Circle;
 
-import hackNSlay.EnemyState;
 import hackNSlay.Game;
 
 public class EasyGnome implements EnemyState {
@@ -33,7 +32,7 @@ public class EasyGnome implements EnemyState {
 	}
 
 	@Override
-	public void movementAction(Gnome gnome, int time) {
+	public void movementAction(Gnome gnome, int time, float x, float y) {
 		runningTime += time;
 		nextStep += time;
 

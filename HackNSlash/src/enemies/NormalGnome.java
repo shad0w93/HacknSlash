@@ -2,8 +2,6 @@ package enemies;
 
 import org.newdawn.slick.geom.Circle;
 
-import hackNSlay.EnemyState;
-
 public class NormalGnome implements EnemyState {
 	private boolean direction = false; // false = nach X laufen; true = nach Y laufen;
 	private float playerPosX = 1000; //TODO: Ersetzen mit character rectangle pos
@@ -20,7 +18,7 @@ public class NormalGnome implements EnemyState {
 	}
 	
 	@Override
-	public void movementAction(Gnome gnome, int time) {
+	public void movementAction(Gnome gnome, int time, float x, float y) {
 		if (!direction) {
 			if (gnome.xPos > (playerPosX - movementMargin) && gnome.xPos < (playerPosX + movementMargin)) {
 				direction = true;
