@@ -6,7 +6,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.AppletGameContainer.Container;
 import org.newdawn.slick.geom.Circle;
 
-import hackNSlay.Game;
+import main.Game;
 
 public class EasyGnome implements EnemyState {
 	private boolean direction = false; // false = nach X laufen; true = nach Y laufen;
@@ -67,6 +67,12 @@ public class EasyGnome implements EnemyState {
 			xY[1] = 0;
 		}
 		return xY;
+	}
+
+	@Override
+	public void movementAction(Shapeshooter shapeshooter, int delta, float x, float y) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

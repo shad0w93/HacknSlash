@@ -56,4 +56,10 @@ public class NormalGnome implements EnemyState {
 		}
 	}
 
+	@Override
+	public void movementAction(Shapeshooter shapeshooter, int delta, float x, float y) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

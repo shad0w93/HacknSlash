@@ -1,4 +1,4 @@
-package hackNSlay;
+package main;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,8 +19,8 @@ public class Game extends BasicGame {
 	private int mainGameHeigth;
 	private Dungeon dungeon;
 	private Player player;
-
 	Gnome gnom;
+	Shapeshooter shapeshooter;
 
 	public Game() {
 		super("Hack�n�Slash");
@@ -43,7 +43,7 @@ public class Game extends BasicGame {
 		player.render(container, g);
 		dungeon.render(container, g);
 		gnom.render(container, g);
-		
+		shapeshooter.render(container, g);	
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class Game extends BasicGame {
 		player.update(container, delta, input);
 		dungeon.update(container, delta, input, player.getplayerShape());
 		gnom.update(container, delta, player.getxPos(), player.getyPos());
-
+		shapeshooter.update(container, delta, player.getxPos(), player.getyPos());
 	}
 
 	public void setGameField(GameContainer container) {
@@ -75,5 +75,6 @@ public class Game extends BasicGame {
 		mainGameHeigth = 1000;
 		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeigth);
 		gnom = new Gnome();
+		shapeshooter = new Shapeshooter();
 	}
 }

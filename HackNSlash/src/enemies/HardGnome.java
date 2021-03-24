@@ -59,4 +59,10 @@ public class HardGnome implements EnemyState {
 			gnome.circle.setCenterY(gnome.yPos);
 		}
 	}
+
+	@Override
+	public void movementAction(Shapeshooter shapeshooter, int delta, float x, float y) {
+		// TODO Auto-generated method stub
+		
+	}
 }

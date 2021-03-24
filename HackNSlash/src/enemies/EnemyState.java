@@ -6,4 +6,6 @@ import org.newdawn.slick.SlickException;
 
 public interface EnemyState{
 	public void movementAction(Gnome gnom, int delta, float x, float y);
+
+	public void movementAction(Shapeshooter shapeshooter, int delta, float x, float y);
 }
