@@ -1,27 +1,35 @@
 package enemies;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 public class EasyShapeshooter implements EnemyState {
-	int shootDirection; // 0 = initial 1 = nach links schieﬂen, 2 = nach rechts schieﬂen
-	private int stepValue = 5; // Fortbewegungsgeschwindigkeit
+	int shootDirection = 0; // 0 = initial 1 = nach links schieﬂen, 2 = nach rechts schieﬂen
+	private int stepValue = 3; // Fortbewegungsgeschwindigkeit
 	private Random random;
+	boolean inRange = false;
 	int counter;
 	int runningTime;
 	int shootingUpdate = 1;
 	int nextStep;
 	int shootTime;
+	int attackRange = 150;
+	int dungeonSizeX = 1000;
+	int dungeonSizeY = 1000;
+	int gameBorderXY = 32;
 	int moveDirectionXY[];
 
 	public EasyShapeshooter(Shapeshooter shapeshooter) {
 		random = new Random();
-		shapeshooter.xPos = 150;
-		shapeshooter.yPos = 150;
-		shapeshooter.circleRadius = 30;
+		shapeshooter.projectiles = new ArrayList<Projectile>();
+		shapeshooter.xPos = random.nextInt(dungeonSizeX);
+		shapeshooter.yPos = random.nextInt(dungeonSizeY);
+		shapeshooter.circleRadius = 16;
 		shapeshooter.circle = new Circle(shapeshooter.xPos, shapeshooter.yPos, shapeshooter.circleRadius);
 		shapeshooter.name = "Shapeshooter Mirana";
 		runningTime = 0;
@@ -29,7 +37,6 @@ public class EasyShapeshooter implements EnemyState {
 		nextStep = 0;
 		moveDirectionXY = new int[2];
 		moveDirectionXY = changeDirection();
-		createProjectile(shapeshooter);
 	}
 
 	@Override
@@ -48,39 +55,32 @@ public class EasyShapeshooter implements EnemyState {
 			moveDirectionXY = changeDirection();
 		} else if (nextStep >= 30) {
 			nextStep = 0;
-			shapeshooter.xPos = shapeshooter.xPos + moveDirectionXY[0];
-			shapeshooter.yPos = shapeshooter.yPos + moveDirectionXY[1];
-			shapeshooter.circle.setCenterX(shapeshooter.xPos);
-			shapeshooter.circle.setCenterY(shapeshooter.yPos);
+			if (shapeshooter.xPos + moveDirectionXY[0] < dungeonSizeX - gameBorderXY
+					&& shapeshooter.xPos + moveDirectionXY[0] > gameBorderXY) {
+				shapeshooter.xPos = shapeshooter.xPos + moveDirectionXY[0];
+				shapeshooter.circle.setCenterX(shapeshooter.xPos);
+			}
+			if (shapeshooter.yPos + moveDirectionXY[1] < dungeonSizeY - gameBorderXY
+					&& shapeshooter.yPos + moveDirectionXY[1] > gameBorderXY) {
+				shapeshooter.yPos = shapeshooter.yPos + moveDirectionXY[1];
+				shapeshooter.circle.setCenterY(shapeshooter.yPos);
+			}
 		}
+
 		shootTime += delta;
 
-		if (shootTime >= 1000) {
+		if (shootTime >= 2000) {
 			// Neues Geschoss erstellen
-			shootPlayer(shapeshooter, delta, x, y);
 			shootTime = 0;
-			shootDirection = 0;
-			if (x < shapeshooter.shape.getCenterX()) {
-				// Player is on the left side of enemy, shoot left
-				shootDirection = 1;
-			} else {
-				// Player is on right side of enemy, shoot right
-				shootDirection = 2;
-			}
+			shootPlayer(shapeshooter, delta, x, y);
 		} else {
 			// Bewegungsaktion f¸r bestehenden Schuss
-			if (shootDirection == 1) {
-				shapeshooter.shape.setCenterX(shapeshooter.shape.getCenterX() - shootingUpdate);
-			} else if (shootDirection == 2) {
-				shapeshooter.shape.setCenterX(shapeshooter.shape.getCenterX() + shootingUpdate);
+			for (Projectile currentProjectile : shapeshooter.projectiles) {
+				currentProjectile.updateProjectile();
 			}
-
 		}
-	}
-
-	private void shootPlayer(Shapeshooter shapeshooter, int delta, float playerPosX, float playerPosY) {
-		// shoot player if in range
-		createProjectile(shapeshooter);
+		// Projektile auﬂerhalb des Spielbereichs lˆschen
+		Projectile.deleteProjectiles(shapeshooter.projectiles, dungeonSizeX);
 	}
 
 	private int[] changeDirection() {
@@ -102,27 +102,21 @@ public class EasyShapeshooter implements EnemyState {
 		return xY;
 	}
 
-	private void createProjectile(Shapeshooter shapeshooter) {
-		random = new Random();
-		int randomNumber = random.nextInt(3);
-		
-		switch (randomNumber) {
-		case 0:
-			shapeshooter.shape = new Rectangle(shapeshooter.xPos, shapeshooter.yPos, random.nextInt(20),
-					random.nextInt(20));
-			break;
-		case 1:
-			shapeshooter.shape = new Circle(shapeshooter.xPos, shapeshooter.yPos, random.nextInt(20));
-			break;
-		case 2:
-			float[] points = { 7, 45, 10, 33, 11, 42, 15, 30, 17, 36, 25, 0, 33, 37, 37, 31, 38, 41, 41, 34, 42, 45 };
-			shapeshooter.shape = new Polygon(points);
-			break;
-		default:
-			break;
+	private void shootPlayer(Shapeshooter shapeshooter, int delta, float playerPosX, float playerPosY) {
+		if (playerPosX < shapeshooter.circle.getCenterX()) {
+			if (playerPosX <= shapeshooter.circle.getCenterX() + attackRange) {
+				// createProjectile(shapeshooter);
+				// Gegner ist links vom Spieler und in Reichweite
+				shapeshooter.projectile = new Projectile(1, shootingUpdate, shapeshooter.circle.getCenterX(),
+						shapeshooter.circle.getCenterY());
+			}
+		} else if (playerPosX > shapeshooter.circle.getCenterX()) {
+			if (playerPosX >= shapeshooter.circle.getCenterX() - attackRange) {
+				// Gegner ist rechts vom Spieler und in Reichweite
+				shapeshooter.projectile = new Projectile(2, shootingUpdate, shapeshooter.circle.getCenterX(),
+						shapeshooter.circle.getCenterY());
+			}
 		}
-		shapeshooter.shape.setCenterX(shapeshooter.xPos);
-		shapeshooter.shape.setCenterY(shapeshooter.yPos);
+		shapeshooter.projectiles.add(shapeshooter.projectile);
 	}
-
 }
