@@ -2,31 +2,24 @@ package enemies;
 
 import java.util.Random;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.AppletGameContainer.Container;
 import org.newdawn.slick.geom.Circle;
 
-import main.Game;
-
 public class EasyGnome implements EnemyState {
-	private boolean direction = false; // false = nach X laufen; true = nach Y laufen;
-	private int stepValue = 5; // Fortbewegungsgeschwindigkeit
+	private int stepValue = 2; // Fortbewegungsgeschwindigkeit
 	private Random random;
-	int counter;
 	int runningTime;
 	int nextStep;
 	int moveDirectionXY[];
-
+	int dungeonSizeX = 1000;
+	int dungeonSizeY = 1000;
 
 	public EasyGnome(Gnome gnome) {
 		random = new Random();
-		gnome.xPos = 100;
-		gnome.yPos = 100;
-		gnome.circleRadius = 30;
+		gnome.xPos = random.nextInt(dungeonSizeX);
+		gnome.yPos = random.nextInt(dungeonSizeY);
+		gnome.circleRadius = 16;
 		gnome.circle = new Circle(gnome.xPos, gnome.yPos, gnome.circleRadius);
 		gnome.name = "Bob";
-		runningTime = 0;
-		nextStep = 0;
 		moveDirectionXY = new int[2];
 		moveDirectionXY = changeDirection();
 	}
@@ -40,14 +33,18 @@ public class EasyGnome implements EnemyState {
 			runningTime = 0;
 			nextStep = 0;
 			moveDirectionXY = changeDirection();
-		} else if (nextStep >= 30){
+		} else if (nextStep >= 10) {
 			nextStep = 0;
-			gnome.xPos = gnome.xPos + moveDirectionXY[0];
-			gnome.yPos = gnome.yPos + moveDirectionXY[1];
-			gnome.circle.setCenterX(gnome.xPos);
-			gnome.circle.setCenterY(gnome.yPos);
+			if (gnome.xPos + moveDirectionXY[0] < dungeonSizeX && gnome.xPos + moveDirectionXY[0] > 0) {
+				gnome.circle.setCenterX(gnome.xPos);
+				gnome.xPos = gnome.xPos + moveDirectionXY[0];
+			} else if (gnome.yPos + moveDirectionXY[1] < dungeonSizeY && gnome.yPos + moveDirectionXY[1] > 0) {
+				gnome.yPos = gnome.yPos + moveDirectionXY[1];
+				gnome.circle.setCenterY(gnome.yPos);
+			} else {
+				runningTime = 1000;
+			}
 		}
-
 	}
 
 	private int[] changeDirection() {
@@ -71,8 +68,6 @@ public class EasyGnome implements EnemyState {
 
 	@Override
 	public void movementAction(Shapeshooter shapeshooter, int delta, float x, float y) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

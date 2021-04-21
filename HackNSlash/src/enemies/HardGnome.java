@@ -1,26 +1,30 @@
 package enemies;
 
+import java.util.Random;
+
 import org.newdawn.slick.geom.Circle;
 
 public class HardGnome implements EnemyState {
+	private Random random;
 	private boolean direction = false; // false = nach X laufen; true = nach Y laufen;
-	private float playerPosX; //TODO: Ersetzen mit character rectangle pos
-	private float playerPosY; //TODO: Ersetzen mit character rectangle pos
-	private int stepValue = 5;	// Fortbewegungsgeschwindigkeit
+	private float playerPosX;
+	private float playerPosY;
+	private int stepValue = 1;	// Fortbewegungsgeschwindigkeit
 	private int movementMargin = 500; // Ändert den Abstand zwischen Player & Gnome X und Y zur Positionsveränderung
+	int dungeonSizeX = 1000;
+	int dungeonSizeY = 1000;
 
 	public HardGnome(Gnome gnome) {
-		gnome.xPos = 100;
-		gnome.yPos = 100;
+		random = new Random();
+		gnome.xPos = random.nextInt(dungeonSizeX);
+		gnome.yPos = random.nextInt(dungeonSizeY);
 		gnome.circleRadius = 30;
 		gnome.circle = new Circle(gnome.xPos, gnome.yPos, gnome.circleRadius);
 		gnome.name = "Gizmo";
-		playerPosX = 0;
-		playerPosY = 0;
 	}
 
 	@Override
-	public void movementAction(Gnome gnome, int time, float x, float y) {
+	public void movementAction(Gnome gnome, int time, float x, float y) {	
 		playerPosX = x;
 		playerPosY = y;
 		if (!direction) {
@@ -62,7 +66,5 @@ public class HardGnome implements EnemyState {
 
 	@Override
 	public void movementAction(Shapeshooter shapeshooter, int delta, float x, float y) {
-		// TODO Auto-generated method stub
-		
 	}
 }
