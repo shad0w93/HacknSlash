@@ -30,10 +30,12 @@ public class Projectile {
 	}
 
 	void updateProjectile() {
-		if (direction == 1) {
-			shape.setCenterX(shape.getCenterX() - travelSpeed);
-		} else {
-			shape.setCenterX(shape.getCenterX() + travelSpeed);
+		if (shape != null) {
+			if (direction == 1) {
+				shape.setCenterX(shape.getCenterX() - travelSpeed);
+			} else {
+				shape.setCenterX(shape.getCenterX() + travelSpeed);
+			}
 		}
 	}
 
@@ -60,10 +62,14 @@ public class Projectile {
 	}
 
 	static void deleteProjectiles(ArrayList<Projectile> projectiles, int dungeonSizeX) {
-		for (int i = projectiles.size() - 1; i >= 0; i--) {
-			Projectile c = projectiles.get(i);
-			if (c.shape.getCenterX() < 0 | c.shape.getCenterX() > dungeonSizeX) {
-				projectiles.remove(i);
+		if (projectiles.size() == 0 || projectiles == null) {
+			return;
+		} else {
+			for (int i = projectiles.size() - 1; i >= 0; i--) {
+				Projectile c = projectiles.get(i);
+				if (c.shape.getCenterX() < 0 || c.shape.getCenterX() > dungeonSizeX) {
+					projectiles.remove(i);
+				}
 			}
 		}
 	}

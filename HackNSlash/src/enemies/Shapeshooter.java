@@ -24,12 +24,23 @@ public class Shapeshooter extends Enemy {
 		g.fill(circle);
 
 		for (Projectile projectile : projectiles) {
-			g.setColor(Color.pink);
-			g.fill(projectile.getShape());
-		}		
+			if (projectile != null) {
+				g.setColor(Color.pink);
+				g.fill(projectile.getShape());
+			}
+		}
 	}
 
 	public void update(GameContainer container, int delta, float x, float y) throws SlickException {
 		shapeshooterState.movementAction(this, delta, x, y);
+
+		if (!projectiles.isEmpty()) {
+			for (int i = projectiles.size() - 1; i >= 0; i--) {
+				Projectile c = projectiles.get(i);
+				if (c.getShape().getCenterX() < 0 || c.getShape().getCenterX() > 1000) {
+					projectiles.remove(i);
+				}
+			}
+		}
 	}
 }

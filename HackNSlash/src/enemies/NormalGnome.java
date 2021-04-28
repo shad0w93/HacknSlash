@@ -18,7 +18,7 @@ public class NormalGnome implements EnemyState {
 		random = new Random();
 		gnome.xPos = random.nextInt(dungeonSizeX);
 		gnome.yPos = random.nextInt(dungeonSizeY);
-		gnome.circleRadius = 30;
+		gnome.circleRadius = 16;
 		gnome.circle = new Circle(gnome.xPos, gnome.yPos, gnome.circleRadius);
 		gnome.name = "Brian";
 	}

@@ -10,7 +10,7 @@ import org.newdawn.slick.geom.Shape;
 
 public class EasyShapeshooter implements EnemyState {
 	int shootDirection = 0; // 0 = initial 1 = nach links schießen, 2 = nach rechts schießen
-	private int stepValue = 3; // Fortbewegungsgeschwindigkeit
+	private int stepValue = 2; // Fortbewegungsgeschwindigkeit
 	private Random random;
 	boolean inRange = false;
 	int counter;
@@ -18,7 +18,7 @@ public class EasyShapeshooter implements EnemyState {
 	int shootingUpdate = 1;
 	int nextStep;
 	int shootTime;
-	int attackRange = 150;
+	int attackRange = 500;
 	int dungeonSizeX = 1000;
 	int dungeonSizeY = 1000;
 	int gameBorderXY = 32;
@@ -27,8 +27,8 @@ public class EasyShapeshooter implements EnemyState {
 	public EasyShapeshooter(Shapeshooter shapeshooter) {
 		random = new Random();
 		shapeshooter.projectiles = new ArrayList<Projectile>();
-		shapeshooter.xPos = random.nextInt(dungeonSizeX);
-		shapeshooter.yPos = random.nextInt(dungeonSizeY);
+		shapeshooter.xPos = 1000;// random.nextInt(dungeonSizeX);
+		shapeshooter.yPos = 1000;// random.nextInt(dungeonSizeY);
 		shapeshooter.circleRadius = 16;
 		shapeshooter.circle = new Circle(shapeshooter.xPos, shapeshooter.yPos, shapeshooter.circleRadius);
 		shapeshooter.name = "Shapeshooter Mirana";
@@ -75,12 +75,15 @@ public class EasyShapeshooter implements EnemyState {
 			shootPlayer(shapeshooter, delta, x, y);
 		} else {
 			// Bewegungsaktion für bestehenden Schuss
-			for (Projectile currentProjectile : shapeshooter.projectiles) {
-				currentProjectile.updateProjectile();
-			}
+//			for (Projectile currentProjectile : shapeshooter.projectiles) {
+//				if (currentProjectile != null) {
+//					currentProjectile.updateProjectile();
+//				}
+//			}
+			// Projektile außerhalb des Spielbereichs löschen
+			// if (!shapeshooter.projectiles.isEmpty()) {
+			// Projectile.deleteProjectiles(shapeshooter.projectiles, dungeonSizeX);
 		}
-		// Projektile außerhalb des Spielbereichs löschen
-		Projectile.deleteProjectiles(shapeshooter.projectiles, dungeonSizeX);
 	}
 
 	private int[] changeDirection() {
@@ -104,14 +107,13 @@ public class EasyShapeshooter implements EnemyState {
 
 	private void shootPlayer(Shapeshooter shapeshooter, int delta, float playerPosX, float playerPosY) {
 		if (playerPosX < shapeshooter.circle.getCenterX()) {
-			if (playerPosX <= shapeshooter.circle.getCenterX() + attackRange) {
-				// createProjectile(shapeshooter);
+			if (playerPosX + attackRange >= shapeshooter.circle.getCenterX()) {
 				// Gegner ist links vom Spieler und in Reichweite
 				shapeshooter.projectile = new Projectile(1, shootingUpdate, shapeshooter.circle.getCenterX(),
 						shapeshooter.circle.getCenterY());
 			}
 		} else if (playerPosX > shapeshooter.circle.getCenterX()) {
-			if (playerPosX >= shapeshooter.circle.getCenterX() - attackRange) {
+			if (playerPosX - attackRange <= shapeshooter.circle.getCenterX()) {
 				// Gegner ist rechts vom Spieler und in Reichweite
 				shapeshooter.projectile = new Projectile(2, shootingUpdate, shapeshooter.circle.getCenterX(),
 						shapeshooter.circle.getCenterY());
