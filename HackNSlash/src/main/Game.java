@@ -1,7 +1,5 @@
 package main;
 
-import java.util.concurrent.TimeUnit;
-
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
@@ -16,15 +14,15 @@ public class Game extends BasicGame {
 	private int xMainGame;
 	private int yMainGame;
 	private int mainGameWidth;
-	private int mainGameHeigth;
+	private int mainGameHeight;
 	private Dungeon dungeon;
 	private Player player;
-	Gnome gnom;
+	Gnome gnome;
 	Shapeshooter shapeshooter;
 
 	public Game() {
-		super("Hack�n�Slash");
-		gnom = new Gnome();
+		super("Hack'n'Slash");
+		gnome = new Gnome();
 	}
 
 	public static void main(String[] args) throws SlickException {
@@ -42,7 +40,7 @@ public class Game extends BasicGame {
 		//g.fill(spell);
 		player.render(container, g);
 		dungeon.render(container, g);
-		gnom.render(container, g);
+		gnome.render(container, g);
 		shapeshooter.render(container, g);	
 	}
 
@@ -52,7 +50,7 @@ public class Game extends BasicGame {
 		setGameField(container);
 		container.setMinimumLogicUpdateInterval(5);
 		container.setMaximumLogicUpdateInterval(5);
-		dungeon = new Dungeon(mainGameWidth, mainGameHeigth);
+		dungeon = new Dungeon(mainGameWidth, mainGameHeight);
 		player = new Player();
 
 	}
@@ -64,7 +62,7 @@ public class Game extends BasicGame {
 		}
 		player.update(container, delta, input);
 		dungeon.update(container, delta, input, player.getplayerShape());
-		gnom.update(container, delta, player.getxPos(), player.getyPos());
+		gnome.update(container, delta, player.getxPos(), player.getyPos());
 		shapeshooter.update(container, delta, player.getxPos(), player.getyPos());
 	}
 
@@ -72,9 +70,9 @@ public class Game extends BasicGame {
 		xMainGame = 0;
 		yMainGame = 0;
 		mainGameWidth = container.getWidth() - (container.getWidth() / 3);
-		mainGameHeigth = 1000;
-		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeigth);
-		gnom = new Gnome();
+		mainGameHeight = 1000;
+		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeight);
+		gnome = new Gnome();
 		shapeshooter = new Shapeshooter();
 	}
 }
