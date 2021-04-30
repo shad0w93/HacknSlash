@@ -1,12 +1,11 @@
 package enemies;
 
-import java.util.ArrayList;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Shape;
+
+import java.util.ArrayList;
 
 public class Shapeshooter extends Enemy {
 
@@ -14,8 +13,15 @@ public class Shapeshooter extends Enemy {
 	Projectile projectile;
 	ArrayList<Projectile> projectiles;
 
+	int shootTime;
+	int attackRange = 500;
+	int shootingUpdate = 1;
+	int gameBorderXY = 50;
+
 	public Shapeshooter() {
 		projectiles = new ArrayList<Projectile>();
+		circleRadius = 16; // Größe des Gegners
+
 		this.shapeshooterState = new EasyShapeshooter(this);
 	}
 
@@ -33,13 +39,41 @@ public class Shapeshooter extends Enemy {
 
 	public void update(GameContainer container, int delta, float x, float y) throws SlickException {
 		shapeshooterState.movementAction(this, delta, x, y);
+		shootingAction(delta, x, y, container.getWidth() - (container.getWidth() / 3));
+	}
 
-		if (!projectiles.isEmpty()) {
-			for (int i = projectiles.size() - 1; i >= 0; i--) {
-				Projectile c = projectiles.get(i);
-				if (c.getShape().getCenterX() < 0 || c.getShape().getCenterX() > 1000) {
-					projectiles.remove(i);
-				}
+
+	public void shootingAction(int delta, float x, float y,int dungeonSizeX) {
+		shootTime += delta;
+
+		if (shootTime >= 2000) {
+			// Neues Geschoss erstellen
+			shootTime = 0;
+			shootPlayer(delta, x, y);
+		} else {
+			// Bewegungsaktion für bestehenden Schuss
+			for (Projectile currentProjectile : projectiles) {
+				currentProjectile.updateProjectile();
+			}
+			// Projektile außerhalb des Spielbereichs löschen
+			Projectile.deleteProjectiles(projectiles, dungeonSizeX);
+		}
+	}
+
+	private void shootPlayer(int delta, float playerPosX, float playerPosY) {
+		if (playerPosX < circle.getCenterX()) {
+			if (playerPosX + attackRange >= circle.getCenterX()) {
+				// Gegner ist links vom Spieler und in Reichweite
+				projectile = new Projectile(1, shootingUpdate, circle.getCenterX(),
+						circle.getCenterY());
+				projectiles.add(projectile);
+			}
+		} else if (playerPosX > circle.getCenterX()) {
+			if (playerPosX - attackRange <= circle.getCenterX()) {
+				// Gegner ist rechts vom Spieler und in Reichweite
+				projectile = new Projectile(2, shootingUpdate, circle.getCenterX(),
+						circle.getCenterY());
+				projectiles.add(projectile);
 			}
 		}
 	}

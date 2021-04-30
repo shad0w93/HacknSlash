@@ -1,12 +1,12 @@
 package enemies;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Projectile {
 	private Shape shape;
@@ -29,6 +29,28 @@ public class Projectile {
 		createProjectile();
 	}
 
+	private void createProjectile() {
+		random = new Random();
+		int randomNumber = random.nextInt(3);
+
+		switch (randomNumber) {
+		case 0:
+			shape = new Rectangle(xPos, yPos, random.nextInt(10) + 5, random.nextInt(10) + 5);
+			break;
+		case 1:
+			shape = new Circle(xPos, yPos, random.nextInt(8)+2);
+			break;
+		case 2:
+			float[] points = { 0, 2, 5, 10, 10, 2 };
+			shape = new Polygon(points);
+			break;
+		default:
+			break;
+		}
+		shape.setCenterX(xPos);
+		shape.setCenterY(yPos);
+	}
+
 	void updateProjectile() {
 		if (shape != null) {
 			if (direction == 1) {
@@ -37,28 +59,6 @@ public class Projectile {
 				shape.setCenterX(shape.getCenterX() + travelSpeed);
 			}
 		}
-	}
-
-	private void createProjectile() {
-		random = new Random();
-		int randomNumber = random.nextInt(3);
-
-		switch (randomNumber) {
-		case 0:
-			shape = new Rectangle(xPos, yPos, random.nextInt(20), random.nextInt(20) + 20);
-			break;
-		case 1:
-			shape = new Circle(xPos, yPos, random.nextInt(20));
-			break;
-		case 2:
-			float[] points = { 0, 7, 20, 40, 40, 7 };
-			shape = new Polygon(points);
-			break;
-		default:
-			break;
-		}
-		shape.setCenterX(xPos);
-		shape.setCenterY(yPos);
 	}
 
 	static void deleteProjectiles(ArrayList<Projectile> projectiles, int dungeonSizeX) {

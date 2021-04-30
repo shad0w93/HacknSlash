@@ -1,8 +1,8 @@
 package enemies;
 
-import java.util.Random;
-
 import org.newdawn.slick.geom.Circle;
+
+import java.util.Random;
 
 public class EasyGnome implements EnemyState {
 	private int stepValue = 2; // Fortbewegungsgeschwindigkeit
@@ -25,7 +25,7 @@ public class EasyGnome implements EnemyState {
 	}
 
 	@Override
-	public void movementAction(Gnome gnome, int time, float x, float y) {
+	public void movementAction(Enemy enemy, int time, float x, float y) {
 		runningTime += time;
 		nextStep += time;
 
@@ -35,12 +35,12 @@ public class EasyGnome implements EnemyState {
 			moveDirectionXY = changeDirection();
 		} else if (nextStep >= 10) {
 			nextStep = 0;
-			if (gnome.xPos + moveDirectionXY[0] < dungeonSizeX && gnome.xPos + moveDirectionXY[0] > 0) {
-				gnome.circle.setCenterX(gnome.xPos);
-				gnome.xPos = gnome.xPos + moveDirectionXY[0];
-			} else if (gnome.yPos + moveDirectionXY[1] < dungeonSizeY && gnome.yPos + moveDirectionXY[1] > 0) {
-				gnome.yPos = gnome.yPos + moveDirectionXY[1];
-				gnome.circle.setCenterY(gnome.yPos);
+			if (enemy.xPos + moveDirectionXY[0] < dungeonSizeX && enemy.xPos + moveDirectionXY[0] > 0) {
+				enemy.circle.setCenterX(enemy.xPos);
+				enemy.xPos = enemy.xPos + moveDirectionXY[0];
+			} else if (enemy.yPos + moveDirectionXY[1] < dungeonSizeY && enemy.yPos + moveDirectionXY[1] > 0) {
+				enemy.yPos = enemy.yPos + moveDirectionXY[1];
+				enemy.circle.setCenterY(enemy.yPos);
 			} else {
 				runningTime = 1000;
 			}
@@ -65,9 +65,4 @@ public class EasyGnome implements EnemyState {
 		}
 		return xY;
 	}
-
-	@Override
-	public void movementAction(Shapeshooter shapeshooter, int delta, float x, float y) {
-	}
-
 }
