@@ -2,58 +2,65 @@ package enemies;
 
 import org.newdawn.slick.geom.Circle;
 
+import java.util.Random;
+
 public class NormalGnome implements EnemyState {
+	private Random random;
 	private boolean direction = false; // false = nach X laufen; true = nach Y laufen;
-	private float playerPosX = 1000; //TODO: Ersetzen mit character rectangle pos
-	private float playerPosY = 1000; //TODO: Ersetzen mit character rectangle pos
-	private int stepValue = 5;	// Fortbewegungsgeschwindigkeit
+	private float playerPosX;
+	private float playerPosY;
+	private int stepValue = 1; // Fortbewegungsgeschwindigkeit
 	private int movementMargin = 100; // Ändert den Abstand zwischen Player & Gnome X und Y zur Positionsveränderung
+	int dungeonSizeX = 1000;
+	int dungeonSizeY = 1000;
 
 	public NormalGnome(Gnome gnome) {
-		gnome.xPos = 100;
-		gnome.yPos = 100;
-		gnome.circleRadius = 30;
+		random = new Random();
+		gnome.xPos = random.nextInt(dungeonSizeX);
+		gnome.yPos = random.nextInt(dungeonSizeY);
+		gnome.circleRadius = 16;
 		gnome.circle = new Circle(gnome.xPos, gnome.yPos, gnome.circleRadius);
 		gnome.name = "Brian";
 	}
-	
+
 	@Override
-	public void movementAction(Gnome gnome, int time, float x, float y) {
+	public void movementAction(Enemy enemy, int time, float x, float y) {
+		playerPosX = x;
+		playerPosY = y;
 		if (!direction) {
-			if (gnome.xPos > (playerPosX - movementMargin) && gnome.xPos < (playerPosX + movementMargin)) {
+			if (enemy.xPos > (playerPosX - movementMargin) && enemy.xPos < (playerPosX + movementMargin)) {
 				direction = true;
-				moveUpDown(gnome);
+				moveUpDown(enemy);
 			} else {
-				moveLeftRight(gnome);
+				moveLeftRight(enemy);
 			}
 		} else {
-			if (gnome.yPos > (playerPosY - movementMargin) && gnome.yPos < (playerPosY + movementMargin)) {
+			if (enemy.yPos > (playerPosY - movementMargin) && enemy.yPos < (playerPosY + movementMargin)) {
 				direction = false;
-				moveLeftRight(gnome);
+				moveLeftRight(enemy);
 			} else {
-				moveUpDown(gnome);
+				moveUpDown(enemy);
 			}
 		}
 	}
 
-	public void moveLeftRight(Gnome gnome) {
-		if (playerPosX > gnome.xPos) {
-			gnome.xPos = gnome.xPos + stepValue;
-			gnome.circle.setCenterX(gnome.xPos);
-		} else if (playerPosX < gnome.xPos) {
-			gnome.xPos = gnome.xPos - stepValue;
-			gnome.circle.setCenterX(gnome.xPos);
+	public void moveLeftRight(Enemy enemy) {
+		if (playerPosX > enemy.xPos) {
+			enemy.xPos = enemy.xPos + stepValue;
+			enemy.circle.setCenterX(enemy.xPos);
+		} else if (playerPosX < enemy.xPos) {
+			enemy.xPos = enemy.xPos - stepValue;
+			enemy.circle.setCenterX(enemy.xPos);
 		}
 	}
 
-	public void moveUpDown(Gnome gnome) {
-		if (playerPosY > gnome.yPos) {
-			gnome.yPos = gnome.yPos + stepValue;
-			gnome.circle.setCenterY(gnome.yPos);
-		} else if (playerPosY < gnome.yPos) {
-			gnome.yPos = gnome.yPos - stepValue;
-			gnome.circle.setCenterY(gnome.yPos);
+	public void moveUpDown(Enemy enemy) {
+		if (playerPosY > enemy.yPos) {
+			enemy.yPos = enemy.yPos + stepValue;
+			enemy.circle.setCenterY(enemy.yPos);
+		} else if (playerPosY < enemy.yPos) {
+			enemy.yPos = enemy.yPos - stepValue;
+			enemy.circle.setCenterY(enemy.yPos);
 		}
 	}
-
 }

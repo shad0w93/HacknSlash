@@ -1,5 +1,7 @@
 package enemies;
 
+import java.util.Random;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -8,8 +10,14 @@ import org.newdawn.slick.SlickException;
 public class Gnome extends Enemy{
 		
 	public EnemyState gnomeState;
+	private int delay;
+	private float playerPosX;
+	private float playerPosY;
+	private Random random;
 	
 	public Gnome() {
+		//this.gnomeState = new EasyGnome(this);
+		//this.gnomeState = new NormalGnome(this);
 		this.gnomeState = new HardGnome(this);
 	}
 	public void render(GameContainer container, Graphics g) throws SlickException{
@@ -17,6 +25,17 @@ public class Gnome extends Enemy{
 		g.fill(circle);
 	};
 	public void update(GameContainer container, int delta, float x, float y) throws SlickException{
-		gnomeState.movementAction(this, delta, x, y);
+		// Aus Funktion aussteigen, bis "delay" erreicht wird.
+		delay += delta;
+		if (delay <= 10) {
+			return;
+		}
+		delay = 0;
+		
+		random = new Random();
+		// Position des Spielers wird verfälscht, damit der Spieler nicht genau verfolgt wird
+		playerPosX = x + (random.nextInt(20)+5);
+		playerPosY = y + (random.nextInt(20)+5);
+		gnomeState.movementAction(this, delta, playerPosX, playerPosY);
 	};
 }
