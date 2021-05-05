@@ -19,25 +19,25 @@ public class Player {
 		xPos = 500;
 		xPos = 300;
 		size = 40;
-		velocity = 20;
+		velocity = 1;
 		playerShape = new Circle(xPos, yPos, size);
 		playerClass = new Wizard();
 	}
 
 	public void update(GameContainer container, int delta, Input input) throws SlickException {
-		if (container.getInput().isKeyPressed(Input.KEY_RIGHT)) {
+		if (container.getInput().isKeyDown(Input.KEY_RIGHT)) {
 			xPos = xPos + velocity;
 			playerShape.setCenterX(xPos);
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_LEFT)) {
+		if (container.getInput().isKeyDown(Input.KEY_LEFT)) {
 			xPos = xPos - velocity;
 			playerShape.setCenterX(xPos);
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_UP)) {
+		if (container.getInput().isKeyDown(Input.KEY_UP)) {
 			yPos = yPos - velocity;
 			playerShape.setCenterY(yPos);
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_DOWN)) {
+		if (container.getInput().isKeyDown(Input.KEY_DOWN)) {
 			yPos = yPos + velocity;
 			playerShape.setCenterY(yPos);
 		}
