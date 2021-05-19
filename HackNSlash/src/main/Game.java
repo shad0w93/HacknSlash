@@ -1,10 +1,9 @@
 package main;
 
+import minigame.Minigame;
 import java.util.ArrayList;
-
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
-
 import levelgenerator.*;
 import player.*;
 
@@ -12,10 +11,13 @@ public class Game extends BasicGame {
 
 	private Input input;
 	private Rectangle mainGame;
+	private Rectangle miniGame;
 	private int xMainGame;
 	private int yMainGame;
+	private int xMiniGame;
 	private int mainGameWidth;
 	private int mainGameHeight;
+	private Minigame minigame;
 	private Dungeon dungeon;
 	private Player player;
 
@@ -35,8 +37,12 @@ public class Game extends BasicGame {
 		g.setColor(Color.darkGray);
 		g.fill(mainGame);
 
+		g.setColor(Color.black);
+		g.fill(miniGame);
+
 		g.setColor(Color.green);
 		//g.fill(spell);
+		minigame.render(container, g);
 		player.render(container, g);
 		dungeon.render(container, g);
 	}
@@ -47,9 +53,9 @@ public class Game extends BasicGame {
 		setGameField(container);
 		container.setMinimumLogicUpdateInterval(5);
 		container.setMaximumLogicUpdateInterval(5);
+		minigame = new Minigame(xMiniGame);
 		dungeon = new Dungeon(mainGameWidth, mainGameHeight);
 		player = new Player();
-
 	}
 
 	@Override
@@ -57,8 +63,11 @@ public class Game extends BasicGame {
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			container.exit();
 		}
-		player.update(dungeon, container, delta, input);
-		dungeon.update(container, delta, input, player);
+		minigame.update(container, delta, input);
+		player.update(container, delta, input);
+		dungeon.update(container, delta, input, player.getplayerShape());
+		gnome.update(container, delta, player.getxPos(), player.getyPos());
+		shapeshooter.update(container, delta, player.getxPos(), player.getyPos());
 	}
 
 	public void setGameField(GameContainer container) {
@@ -67,5 +76,9 @@ public class Game extends BasicGame {
 		mainGameWidth = container.getWidth() - (container.getWidth() / 3);
 		mainGameHeight = 1000;
 		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeight);
+		xMiniGame = mainGameWidth;
+		miniGame = new Rectangle(xMainGame + mainGameWidth, yMainGame, container.getWidth()/3, container.getHeight());
+		gnome = new Gnome();
+		shapeshooter = new Shapeshooter();
 	}
 }
