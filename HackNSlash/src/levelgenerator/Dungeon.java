@@ -1,16 +1,10 @@
 package levelgenerator;
 
-import java.util.ArrayList;
-
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-import enemies.*;
 import player.Player;
+
+import java.util.ArrayList;
 
 public class Dungeon {
 
@@ -65,8 +59,6 @@ public class Dungeon {
 	}
 
 	public void checkForDoor(Player player, int delta) {
-		System.out.println(levelPositionY);
-
 		for (int direction = 0; direction < 4; direction++) {
 			for (Rectangle door : doors[levelPositionX][levelPositionY][direction]) {
 				if (player.getplayerShape().intersects(door)) {
