@@ -1,4 +1,4 @@
-package hackNSlay;
+package player;
 
 public abstract class Character {
 	
