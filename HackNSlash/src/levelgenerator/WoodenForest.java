@@ -3,9 +3,19 @@ package levelgenerator;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.w3c.dom.css.Rect;
+
+import enemies.Enemy;
+import enemies.Gnome;
+import enemies.Projectile;
+import enemies.Shapeshooter;
+import player.Player;
 
 public class WoodenForest implements DungeonState {
 	public int level;
@@ -13,12 +23,15 @@ public class WoodenForest implements DungeonState {
 	Random random;
 	// [Reihe][spalte][0 = Oben, 1 = Rechts, 2 = Unten, 3 = Links];
 	public static int[][][] levelRoomDoors;
+	
+	//Enemies
+	private ArrayList<Enemy> enemies[][];
 
 	public WoodenForest(Dungeon dungeon) {
 		random = new Random();
 		levelRoomDoors = new int[dungeon.walls.length][dungeon.walls[0].length][4];
 		newDungeonLevel(dungeon);
-		spawnMobs(dungeon);
+		spawnEnemies(dungeon);
 
 	}
 
@@ -289,11 +302,53 @@ public class WoodenForest implements DungeonState {
 	}
 	
 	@Override
-	public void spawnMobs(Dungeon dungeon) {
-		// TODO Auto-generated method stub
-
+	public void spawnEnemies(Dungeon dungeon) {
+		initEnemies(dungeon);
+		generateEnemies(dungeon);
 	}
 
-	
-	
+	private void generateEnemies(Dungeon dungeon) {
+		for (int i = 0; i < enemies.length; i++) {
+			for (int y = 0; y < enemies[0].length; y++) {
+				int mobsToGenerate = 9 + random.nextInt(11);
+				for(int e = 0; e <= mobsToGenerate; e++) {
+					int mobType = random.nextInt(2);
+					switch(mobType) {
+					case 0:
+						enemies[i][y].add(new Gnome());
+						break;
+					case 1:
+						enemies[i][y].add(new Shapeshooter());
+						break;
+					}
+				}
+			}
+		}			
+	}
+
+	@SuppressWarnings({ "unchecked", "static-access" })
+	private void initEnemies(Dungeon dungeon) {
+		enemies = new ArrayList[dungeon.maxXPosition][dungeon.maxYPosition];
+		for (int i = 0; i < enemies.length; i++) {
+			for (int y = 0; y < enemies[0].length; y++) {
+				enemies[i][y] = new ArrayList<Enemy>();
+			}
+		}			
+	}
+
+	@Override
+	public void moveEnemies(Dungeon dungeon, GameContainer container, int delta, Input input, Player player) throws SlickException {
+		for (int i = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; i >= 0; i--) {
+			enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).update(container, delta, player.getxPos(), player.getyPos());;
+		}		
+	}
+
+	@Override
+	public void renderEnemies(Dungeon dungeon, GameContainer container, Graphics g) throws SlickException {
+		for (int i = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; i >= 0; i--) {
+			enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).render(container, g);
+			
+		}			
+	}
+
 }

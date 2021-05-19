@@ -25,7 +25,7 @@ public class EasyGnome implements EnemyState {
 	}
 
 	@Override
-	public void movementAction(Enemy enemy, int time, float x, float y) {
+	public void update(Enemy enemy, int time, float x, float y) {
 		runningTime += time;
 		nextStep += time;
 

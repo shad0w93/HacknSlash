@@ -1,5 +1,6 @@
 package enemies;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Circle;
 
 import java.util.Random;
@@ -24,7 +25,7 @@ public class HardGnome implements EnemyState {
 	}
 
 	@Override
-	public void movementAction(Enemy enemy, int time, float x, float y) {
+	public void update(Enemy enemy, int time, float x, float y) {
 		playerPosX = x;
 		playerPosY = y;
 		if (!direction) {
@@ -63,4 +64,5 @@ public class HardGnome implements EnemyState {
 			enemy.circle.setCenterY(enemy.yPos);
 		}
 	}
+
 }

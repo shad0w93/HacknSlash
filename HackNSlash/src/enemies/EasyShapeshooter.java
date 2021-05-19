@@ -29,7 +29,7 @@ public class EasyShapeshooter implements EnemyState {
 	}
 
 	@Override
-	public void movementAction(Enemy enemy, int delta, float x, float y) {
+	public void update(Enemy enemy, int delta, float x, float y) {
 		runningTime += delta;
 		nextStep += delta;
 

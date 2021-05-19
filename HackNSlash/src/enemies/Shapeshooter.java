@@ -38,7 +38,7 @@ public class Shapeshooter extends Enemy {
 	}
 
 	public void update(GameContainer container, int delta, float x, float y) throws SlickException {
-		shapeshooterState.movementAction(this, delta, x, y);
+		shapeshooterState.update(this, delta, x, y);
 		shootingAction(delta, x, y, container.getWidth() - (container.getWidth() / 3));
 	}
 

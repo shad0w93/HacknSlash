@@ -5,7 +5,9 @@ import java.util.Random;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Shape;
 
 public class Gnome extends Enemy{
 		
@@ -24,6 +26,7 @@ public class Gnome extends Enemy{
 		g.setColor(Color.red);
 		g.fill(circle);
 	};
+	
 	public void update(GameContainer container, int delta, float x, float y) throws SlickException{
 		// Aus Funktion aussteigen, bis "delay" erreicht wird.
 		delay += delta;
@@ -36,6 +39,7 @@ public class Gnome extends Enemy{
 		// Position des Spielers wird verfälscht, damit der Spieler nicht genau verfolgt wird
 		playerPosX = x + (random.nextInt(20)+5);
 		playerPosY = y + (random.nextInt(20)+5);
-		gnomeState.movementAction(this, delta, playerPosX, playerPosY);
-	};
+		gnomeState.update(this, delta, playerPosX, playerPosY);
+	}
+
 }

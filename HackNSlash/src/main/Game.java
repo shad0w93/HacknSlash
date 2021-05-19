@@ -1,11 +1,12 @@
 package main;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
 import levelgenerator.*;
 import player.*;
-import enemies.*;
 
 public class Game extends BasicGame {
 
@@ -17,16 +18,14 @@ public class Game extends BasicGame {
 	private int mainGameHeight;
 	private Dungeon dungeon;
 	private Player player;
-	Gnome gnome;
-	Shapeshooter shapeshooter;
 
 	public Game() {
 		super("Hack'n'Slash");
-		gnome = new Gnome();
 	}
 
 	public static void main(String[] args) throws SlickException {
-		AppGameContainer container = new AppGameContainer(new Game());
+		AppGameContainer container = new AppGameContainer(new 
+				Game());
 		container.setDisplayMode(1500, 1000, false);
 		container.start();
 	}
@@ -40,8 +39,6 @@ public class Game extends BasicGame {
 		//g.fill(spell);
 		player.render(container, g);
 		dungeon.render(container, g);
-		gnome.render(container, g);
-		shapeshooter.render(container, g);	
 	}
 
 	@Override
@@ -60,10 +57,8 @@ public class Game extends BasicGame {
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			container.exit();
 		}
-		player.update(container, delta, input);
-		dungeon.update(container, delta, input, player.getplayerShape());
-		gnome.update(container, delta, player.getxPos(), player.getyPos());
-		shapeshooter.update(container, delta, player.getxPos(), player.getyPos());
+		player.update(dungeon, container, delta, input);
+		dungeon.update(container, delta, input, player);
 	}
 
 	public void setGameField(GameContainer container) {
@@ -72,7 +67,5 @@ public class Game extends BasicGame {
 		mainGameWidth = container.getWidth() - (container.getWidth() / 3);
 		mainGameHeight = 1000;
 		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeight);
-		gnome = new Gnome();
-		shapeshooter = new Shapeshooter();
 	}
 }
