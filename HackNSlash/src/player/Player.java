@@ -3,6 +3,8 @@ package player;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
+import levelgenerator.Dungeon;
+
 public class Player {
 
 	private String name;
@@ -17,46 +19,65 @@ public class Player {
 	public Player() {
 		name = "Joe";
 		xPos = 500;
-		xPos = 300;
+		yPos = 500;
 		size = 40;
 		velocity = 1;
 		playerShape = new Circle(xPos, yPos, size);
 		playerClass = new Wizard();
 	}
 
-	public void update(GameContainer container, int delta, Input input) throws SlickException {
+	public void update(Dungeon dungeon, GameContainer container, int delta, Input input) throws SlickException {
 		if (container.getInput().isKeyDown(Input.KEY_RIGHT)) {
 			xPos = xPos + velocity;
 			playerShape.setCenterX(xPos);
+			if (checkForWallCollision(dungeon, 1)) {
+				xPos = xPos - velocity;
+				playerShape.setCenterX(xPos);
+			}
 		}
 		if (container.getInput().isKeyDown(Input.KEY_LEFT)) {
 			xPos = xPos - velocity;
 			playerShape.setCenterX(xPos);
+			if (checkForWallCollision(dungeon, 3)) {
+				xPos = xPos + velocity;
+				playerShape.setCenterX(xPos);
+			}
 		}
 		if (container.getInput().isKeyDown(Input.KEY_UP)) {
 			yPos = yPos - velocity;
 			playerShape.setCenterY(yPos);
+			if (checkForWallCollision(dungeon, 0)) {
+				yPos = yPos + velocity;
+				playerShape.setCenterX(xPos);
+			}
 		}
 		if (container.getInput().isKeyDown(Input.KEY_DOWN)) {
 			yPos = yPos + velocity;
 			playerShape.setCenterY(yPos);
+			if (checkForWallCollision(dungeon, 2)) {
+				yPos = yPos - velocity;
+				playerShape.setCenterX(xPos);
+			}
 		}
 		playerClass.update(container, delta, input);
 
 	}
-	
+
+	private boolean checkForWallCollision(Dungeon dungeon, int direction) {
+		boolean hitsAWall = false;
+			for (Rectangle wall : dungeon.walls[dungeon.levelPositionX][dungeon.levelPositionY][direction]) {
+				if (getplayerShape().intersects(wall)) {
+					hitsAWall = true;
+					direction = 5;
+				}
+			}
+		return hitsAWall;
+	}
+
 	public void render(GameContainer container, Graphics g) {
 		g.setColor(Color.green);
 		g.fill(playerShape);
 	}
-
-	
-	
-	
-	
-	
-	
-	
 
 	// Getter and Setter
 	public String getName() {

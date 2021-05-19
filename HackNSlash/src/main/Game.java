@@ -1,12 +1,11 @@
 package main;
 
 import minigame.Minigame;
+import java.util.ArrayList;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
-
 import levelgenerator.*;
 import player.*;
-import enemies.*;
 
 public class Game extends BasicGame {
 
@@ -21,15 +20,14 @@ public class Game extends BasicGame {
 	private Minigame minigame;
 	private Dungeon dungeon;
 	private Player player;
-	Gnome gnome;
-	Shapeshooter shapeshooter;
 
 	public Game() {
 		super("Hack'n'Slash");
 	}
 
 	public static void main(String[] args) throws SlickException {
-		AppGameContainer container = new AppGameContainer(new Game());
+		AppGameContainer container = new AppGameContainer(new 
+				Game());
 		container.setDisplayMode(1500, 1000, false);
 		container.start();
 	}
@@ -47,8 +45,6 @@ public class Game extends BasicGame {
 		minigame.render(container, g);
 		player.render(container, g);
 		dungeon.render(container, g);
-		gnome.render(container, g);
-		shapeshooter.render(container, g);	
 	}
 
 	@Override
@@ -80,7 +76,6 @@ public class Game extends BasicGame {
 		mainGameWidth = container.getWidth() - (container.getWidth() / 3);
 		mainGameHeight = 1000;
 		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeight);
-
 		xMiniGame = mainGameWidth;
 		miniGame = new Rectangle(xMainGame + mainGameWidth, yMainGame, container.getWidth()/3, container.getHeight());
 		gnome = new Gnome();
