@@ -64,10 +64,8 @@ public class Game extends BasicGame {
 			container.exit();
 		}
 		minigame.update(container, delta, input);
-		player.update(container, delta, input);
-		dungeon.update(container, delta, input, player.getplayerShape());
-		gnome.update(container, delta, player.getxPos(), player.getyPos());
-		shapeshooter.update(container, delta, player.getxPos(), player.getyPos());
+		player.update(dungeon, container, delta, input);
+		dungeon.update(container, delta, input, player);
 	}
 
 	public void setGameField(GameContainer container) {
@@ -78,7 +76,5 @@ public class Game extends BasicGame {
 		mainGame = new Rectangle(xMainGame, yMainGame, mainGameWidth, mainGameHeight);
 		xMiniGame = mainGameWidth;
 		miniGame = new Rectangle(xMainGame + mainGameWidth, yMainGame, container.getWidth()/3, container.getHeight());
-		gnome = new Gnome();
-		shapeshooter = new Shapeshooter();
 	}
 }

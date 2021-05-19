@@ -21,7 +21,7 @@ public class Minigame {
 
     public Minigame(int xMiniGame) {
         random = new Random();
-        circles = new ArrayList<>();
+        circles = new ArrayList<Shape>();
         this.xMiniGame = xMiniGame;
         score = 0;
         addNewCircle(xMiniGame + random.nextInt(maxWindowSizeX), 0, 16);
