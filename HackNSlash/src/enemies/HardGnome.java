@@ -1,7 +1,7 @@
 package enemies;
 
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Circle;
+import player.Player;
 
 import java.util.Random;
 
@@ -24,27 +24,6 @@ public class HardGnome implements EnemyState {
 		gnome.name = "Gizmo";
 	}
 
-	@Override
-	public void update(Enemy enemy, int time, float x, float y) {
-		playerPosX = x;
-		playerPosY = y;
-		if (!direction) {
-			if (enemy.xPos > (playerPosX - movementMargin) && enemy.xPos < (playerPosX + movementMargin)) {
-				direction = true;
-				moveUpDown(enemy);
-			} else {
-				moveLeftRight(enemy);
-			}
-		} else {
-			if (enemy.yPos > (playerPosY - movementMargin) && enemy.yPos < (playerPosY + movementMargin)) {
-				direction = false;
-				moveLeftRight(enemy);
-			} else {
-				moveUpDown(enemy);
-			}
-		}
-	}
-
 	public void moveLeftRight(Enemy enemy) {
 		if (playerPosX > enemy.xPos) {
 			enemy.xPos = enemy.xPos + stepValue;
@@ -65,4 +44,24 @@ public class HardGnome implements EnemyState {
 		}
 	}
 
+	@Override
+	public void update(Enemy enemy, int time, Player player) {
+		playerPosX = player.getxPos();
+		playerPosY = player.getyPos();
+		if (!direction) {
+			if (enemy.xPos > (playerPosX - movementMargin) && enemy.xPos < (playerPosX + movementMargin)) {
+				direction = true;
+				moveUpDown(enemy);
+			} else {
+				moveLeftRight(enemy);
+			}
+		} else {
+			if (enemy.yPos > (playerPosY - movementMargin) && enemy.yPos < (playerPosY + movementMargin)) {
+				direction = false;
+				moveLeftRight(enemy);
+			} else {
+				moveUpDown(enemy);
+			}
+		}
+	}
 }

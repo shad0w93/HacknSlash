@@ -1,6 +1,7 @@
 package enemies;
 
 import org.newdawn.slick.geom.Circle;
+import player.Player;
 
 import java.util.Random;
 
@@ -24,8 +25,27 @@ public class EasyGnome implements EnemyState {
 		moveDirectionXY = changeDirection();
 	}
 
+	private int[] changeDirection() {
+		int xY[] = new int[2];
+		int direction = random.nextInt(4);
+		if (direction == 0) {
+			xY[0] = 0;
+			xY[1] = stepValue;
+		} else if (direction == 1) {
+			xY[0] = stepValue;
+			xY[1] = 0;
+		} else if (direction == 2) {
+			xY[0] = 0;
+			xY[1] = 0 - stepValue;
+		} else if (direction == 3) {
+			xY[0] = 0 - stepValue;
+			xY[1] = 0;
+		}
+		return xY;
+	}
+
 	@Override
-	public void update(Enemy enemy, int time, float x, float y) {
+	public void update(Enemy enemy, int time, Player player) {
 		runningTime += time;
 		nextStep += time;
 
@@ -45,24 +65,5 @@ public class EasyGnome implements EnemyState {
 				runningTime = 1000;
 			}
 		}
-	}
-
-	private int[] changeDirection() {
-		int xY[] = new int[2];
-		int direction = random.nextInt(4);
-		if (direction == 0) {
-			xY[0] = 0;
-			xY[1] = stepValue;
-		} else if (direction == 1) {
-			xY[0] = stepValue;
-			xY[1] = 0;
-		} else if (direction == 2) {
-			xY[0] = 0;
-			xY[1] = 0 - stepValue;
-		} else if (direction == 3) {
-			xY[0] = 0 - stepValue;
-			xY[1] = 0;
-		}
-		return xY;
 	}
 }

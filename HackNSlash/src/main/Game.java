@@ -1,11 +1,10 @@
 package main;
 
+import levelgenerator.Dungeon;
 import minigame.Minigame;
-import java.util.ArrayList;
 import org.newdawn.slick.*;
-import org.newdawn.slick.geom.*;
-import levelgenerator.*;
-import player.*;
+import org.newdawn.slick.geom.Rectangle;
+import player.Player;
 
 public class Game extends BasicGame {
 
@@ -55,7 +54,7 @@ public class Game extends BasicGame {
 		container.setMaximumLogicUpdateInterval(5);
 		minigame = new Minigame(xMiniGame);
 		dungeon = new Dungeon(mainGameWidth, mainGameHeight);
-		player = new Player();
+		player = new Player(xMiniGame);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package enemies;
 
 import org.newdawn.slick.geom.Circle;
+import player.Player;
 
 import java.util.Random;
 
@@ -28,30 +29,6 @@ public class EasyShapeshooter implements EnemyState {
 		moveDirectionXY = changeDirection();
 	}
 
-	@Override
-	public void update(Enemy enemy, int delta, float x, float y) {
-		runningTime += delta;
-		nextStep += delta;
-
-		if (runningTime >= 5000) {
-			runningTime = 0;
-			nextStep = 0;
-			moveDirectionXY = changeDirection();
-		} else if (nextStep >= 30) {
-			nextStep = 0;
-			if (enemy.xPos + moveDirectionXY[0] < dungeonSizeX - gameBorderXY
-					&& enemy.xPos + moveDirectionXY[0] > gameBorderXY) {
-				enemy.xPos = enemy.xPos + moveDirectionXY[0];
-				enemy.circle.setCenterX(enemy.xPos);
-			}
-			if (enemy.yPos + moveDirectionXY[1] < dungeonSizeY - gameBorderXY
-					&& enemy.yPos + moveDirectionXY[1] > gameBorderXY) {
-				enemy.yPos = enemy.yPos + moveDirectionXY[1];
-				enemy.circle.setCenterY(enemy.yPos);
-			}
-		}
-	}
-
 	private int[] changeDirection() {
 		int[] xY = new int[2];
 		int direction = random.nextInt(4);
@@ -70,5 +47,29 @@ public class EasyShapeshooter implements EnemyState {
 			xY[1] = 0;
 		}
 		return xY;
+	}
+
+	@Override
+	public void update(Enemy enemy, int time, Player player) {
+		runningTime += time;
+		nextStep += time;
+
+		if (runningTime >= 5000) {
+			runningTime = 0;
+			nextStep = 0;
+			moveDirectionXY = changeDirection();
+		} else if (nextStep >= 30) {
+			nextStep = 0;
+			if (enemy.xPos + moveDirectionXY[0] < dungeonSizeX - gameBorderXY
+					&& enemy.xPos + moveDirectionXY[0] > gameBorderXY) {
+				enemy.xPos = enemy.xPos + moveDirectionXY[0];
+				enemy.circle.setCenterX(enemy.xPos);
+			}
+			if (enemy.yPos + moveDirectionXY[1] < dungeonSizeY - gameBorderXY
+					&& enemy.yPos + moveDirectionXY[1] > gameBorderXY) {
+				enemy.yPos = enemy.yPos + moveDirectionXY[1];
+				enemy.circle.setCenterY(enemy.yPos);
+			}
+		}
 	}
 }

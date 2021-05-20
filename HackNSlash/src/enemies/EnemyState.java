@@ -1,7 +1,7 @@
 package enemies;
 
-import org.newdawn.slick.GameContainer;
+import player.Player;
 
 public interface EnemyState {
-	void update(Enemy enemy, int time, float x, float y);
+	void update(Enemy enemy, int time, Player player);
 }

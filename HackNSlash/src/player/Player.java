@@ -1,29 +1,55 @@
 package player;
 
-import org.newdawn.slick.*;
-import org.newdawn.slick.geom.*;
-
 import levelgenerator.Dungeon;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
-public class Player {
+public class Player extends Character {
 
 	private String name;
 	private Shape playerShape;
+	private Rectangle hpBarMax;
+	private Rectangle currentHp;
+	private Rectangle mpBarMax;
+	private Rectangle currentMp;
+	private int maxHpAsInt = 100;
+	private int maxMpAsInt = 100;
+	private Rectangle skill1;
+	private Rectangle skill2;
+	private Rectangle skill3;
+	private Rectangle skill4;
+	private boolean skillsAvailable = false;
 	private PlayerClass playerClass;
-	private int lp = 100;
 	private float xPos;
 	private float yPos;
 	private float size;
 	private float velocity;
 
-	public Player() {
+	public Player(int xMiniGame) {
 		name = "Joe";
 		xPos = 500;
 		yPos = 500;
 		size = 40;
+		lp = 100;
+		mp = 100;
 		velocity = 1;
 		playerShape = new Circle(xPos, yPos, size);
 		playerClass = new Wizard();
+
+		initializeUI(xMiniGame);
+	}
+
+	private void initializeUI(int xMiniGame) {
+		hpBarMax = new Rectangle(xMiniGame + 5,5,100 + 5,20 + 5);
+		currentHp = new Rectangle(xMiniGame + 7,7,100,20);
+		mpBarMax = new Rectangle(hpBarMax.getX(),hpBarMax.getY() + hpBarMax.getHeight() + 3,hpBarMax.getWidth(),hpBarMax.getHeight());
+		currentMp = new Rectangle(currentHp.getX(),mpBarMax.getY() + 2,currentHp.getWidth(),currentHp.getHeight());
+		skill1 = new Rectangle(xMiniGame + hpBarMax.getWidth() + 20, 5, 75, 75);
+		skill2 = new Rectangle(skill1.getWidth() + skill1.getX() + 10, skill1.getY(), skill1.getWidth(), skill1.getHeight());
+		skill3 = new Rectangle(skill1.getWidth() + skill2.getX() + 10, skill2.getY(), skill1.getWidth(), skill1.getHeight());
+		skill4 = new Rectangle(skill1.getWidth() + skill3.getX() + 10, skill3.getY(), skill1.getWidth(), skill1.getHeight());
 	}
 
 	public void update(Dungeon dungeon, GameContainer container, int delta, Input input) throws SlickException {
@@ -61,6 +87,18 @@ public class Player {
 		}
 		playerClass.update(container, delta, input);
 
+		int maxHealth = (int) (hpBarMax.getWidth() - 5);
+		int maxMana = (int) (mpBarMax.getWidth() - 5);
+		if (lp != 100) {
+			currentHp.setWidth(maxHealth *  lp / 100);
+		} else {
+			currentHp.setWidth(maxHealth);
+		}
+		if (mp != 100) {
+			currentMp.setWidth(maxMana *  mp / 100);
+		} else {
+			currentMp.setWidth(maxMana);
+		}
 	}
 
 	private boolean checkForWallCollision(Dungeon dungeon, int direction) {
@@ -77,6 +115,27 @@ public class Player {
 	public void render(GameContainer container, Graphics g) {
 		g.setColor(Color.green);
 		g.fill(playerShape);
+
+		drawUI(g);
+
+	}
+
+	private void drawUI(Graphics g) {
+		g.setColor(Color.white);
+		g.fill(hpBarMax);
+		g.fill(mpBarMax);
+		if (skillsAvailable) {
+			g.fill(skill1);
+			g.fill(skill2);
+			g.fill(skill3);
+			g.fill(skill4);
+		}
+		g.setColor(Color.magenta);
+		g.drawString("HP: " + getLp() + "/" + maxHpAsInt, hpBarMax.getCenterX() - hpBarMax.getWidth() / 2 + 2, hpBarMax.getCenterY() - currentHp.getHeight() / 2);
+		g.setColor(Color.red);
+		g.fill(currentHp);
+		g.setColor(Color.blue);
+		g.fill(currentMp);
 	}
 
 	// Getter and Setter

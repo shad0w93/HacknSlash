@@ -3,7 +3,8 @@ package player;
 public abstract class Character {
 	
 	private String name;
-	private int lp = 100;
+	int lp = 100;
+	int mp = 100;
 	private float xPos;
 	private float yPos;
 	private float size;

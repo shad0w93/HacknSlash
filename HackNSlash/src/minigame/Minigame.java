@@ -82,7 +82,7 @@ public class Minigame {
         } else {
             g.setColor(Color.red);
         }
-        g.drawString("Score: " + score + " pts", container.getWidth() - (container.getWidth() / 3) + 10, 10);
+        g.drawString("Score: " + score + " pts", container.getWidth() - (container.getWidth() / 3) + 10, 100);
         if (score < 0) {
             g.setColor(Color.red);
             g.drawString("WARNING: YOU ARE GETTING A PENALTY!", (container.getWidth() - container.getWidth() / 3) + 125, container.getHeight() / 2);

@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import player.Player;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,12 @@ public class Shapeshooter extends Enemy {
 		this.shapeshooterState = new EasyShapeshooter(this);
 	}
 
+	@Override
+	public void update(GameContainer container, int delta, Player player) throws SlickException {
+		shapeshooterState.update(this, delta, player);
+		shootingAction(delta, player.getxPos(), player.getyPos(), container.getWidth() - (container.getWidth() / 3));
+	}
+
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.setColor(Color.cyan);
 		g.fill(circle);
@@ -37,11 +44,10 @@ public class Shapeshooter extends Enemy {
 		}
 	}
 
-	public void update(GameContainer container, int delta, float x, float y) throws SlickException {
-		shapeshooterState.update(this, delta, x, y);
-		shootingAction(delta, x, y, container.getWidth() - (container.getWidth() / 3));
-	}
+	@Override
+	public void inflictDamage(int dmgAmount) {
 
+	}
 
 	public void shootingAction(int delta, float x, float y,int dungeonSizeX) {
 		shootTime += delta;
