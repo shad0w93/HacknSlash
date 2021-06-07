@@ -31,14 +31,13 @@ public class WoodenForest implements DungeonState {
 		random = new Random();
 		levelRoomDoors = new int[dungeon.walls.length][dungeon.walls[0].length][4];
 		newDungeonLevel(dungeon);
-		spawnEnemies(dungeon);
-
 	}
 
 	public void newDungeonLevel(Dungeon dungeon) {
 		// destroyAllWallsAndDoors(dungeon);
 		destroyAllWallsAndDoors(dungeon);
 		levelRoomDoors = new int[dungeon.walls.length][dungeon.walls[0].length][4];
+		
 		for (int xWalls = 0; xWalls < dungeon.walls.length; xWalls++) {
 			for (int yWalls = 0; yWalls < dungeon.walls[xWalls].length; yWalls++) {
 				buildWalls(dungeon, xWalls, yWalls);
@@ -51,8 +50,20 @@ public class WoodenForest implements DungeonState {
 				setRoomDoors(dungeon, xWalls, yWalls);
 			}
 		}
+		generateNextLevelStair(dungeon);
+		spawnEnemies(dungeon);
 	}
 
+	private void generateNextLevelStair(Dungeon dungeon) {
+		dungeon.nextLevelStair = new Rectangle[dungeon.walls.length][dungeon.walls[0].length];
+		dungeon.xNextLevelStair = random.nextInt(dungeon.walls.length);
+		dungeon.yNextLevelStair = random.nextInt(dungeon.walls[0].length);
+		int xStairPosition = random.nextInt(600) + 200;
+		int yStairPosition = random.nextInt(600) + 200;
+		
+		dungeon.nextLevelStair[dungeon.xNextLevelStair][dungeon.yNextLevelStair] = new Rectangle(xStairPosition, yStairPosition, RECTANGLESIZE, RECTANGLESIZE);
+	}
+	
 	private void destroyAllWallsAndDoors(Dungeon dungeon) {
 		for (int x = 0; x < dungeon.doors.length; x++) {
 			for (int y = 0; y < dungeon.doors.length; y++) {
