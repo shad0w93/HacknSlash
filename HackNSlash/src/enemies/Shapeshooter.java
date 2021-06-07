@@ -13,10 +13,11 @@ public class Shapeshooter extends Enemy {
 	public EnemyState shapeshooterState;
 	Projectile projectile;
 	ArrayList<Projectile> projectiles;
-
+	private int dmgAmount = 2;
 	int shootTime;
 	int attackRange = 500;
 	int shootingUpdate = 1;
+	private int dmgCooldownInMs;
 	int gameBorderXY = 50;
 
 	public Shapeshooter() {
@@ -29,7 +30,7 @@ public class Shapeshooter extends Enemy {
 	@Override
 	public void update(GameContainer container, int delta, Player player) throws SlickException {
 		shapeshooterState.update(this, delta, player);
-		shootingAction(delta, player.getxPos(), player.getyPos(), container.getWidth() - (container.getWidth() / 3));
+		shootingAction(delta, player, container.getWidth() - (container.getWidth() / 3));
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException {
@@ -45,26 +46,31 @@ public class Shapeshooter extends Enemy {
 	}
 
 	@Override
-	public void inflictDamage(int dmgAmount) {
-
+	public void inflictPlayerDamage(int dmgAmount, Player player) {
+		player.setLp(player.getLp()-dmgAmount);
 	}
 
-	public void shootingAction(int delta, float x, float y,int dungeonSizeX) {
+	public void shootingAction(int delta, Player player, int dungeonSizeX) {
 		shootTime += delta;
 
 		if (shootTime >= 2000) {
 			// Neues Geschoss erstellen
 			shootTime = 0;
-			shootPlayer(delta, x, y);
+			shootPlayer(delta, player.getxPos(), player.getyPos());
 		} else {
 			// Bewegungsaktion für bestehenden Schuss
+			dmgCooldownInMs += delta;
 			for (Projectile currentProjectile : projectiles) {
 				currentProjectile.updateProjectile();
+				if (player.getplayerShape().contains(currentProjectile.getShape()) & dmgCooldownInMs > 1000) {
+						inflictPlayerDamage(dmgAmount, player);
+						dmgCooldownInMs = 0;
+					}
+				}
 			}
 			// Projektile außerhalb des Spielbereichs löschen
 			Projectile.deleteProjectiles(projectiles, dungeonSizeX);
 		}
-	}
 
 	private void shootPlayer(int delta, float playerPosX, float playerPosY) {
 		if (playerPosX < circle.getCenterX()) {

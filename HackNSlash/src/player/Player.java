@@ -5,6 +5,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+import java.awt.Font;
 
 public class Player extends Character {
 
@@ -21,6 +22,9 @@ public class Player extends Character {
 	private Rectangle skill3;
 	private Rectangle skill4;
 	private boolean skillsAvailable = false;
+	private Font font;
+	private TrueTypeFont hpString;
+	private TrueTypeFont mpString;
 	private PlayerClass playerClass;
 	private float xPos;
 	private float yPos;
@@ -42,6 +46,9 @@ public class Player extends Character {
 	}
 
 	private void initializeUI(int xMiniGame) {
+		font = new Font("Times New Roman", font.BOLD , 16);
+		hpString = new TrueTypeFont(font, true);
+		mpString = new TrueTypeFont(font, true);
 		hpBarMax = new Rectangle(xMiniGame + 5,5,100 + 5,20 + 5);
 		currentHp = new Rectangle(xMiniGame + 7,7,100,20);
 		mpBarMax = new Rectangle(hpBarMax.getX(),hpBarMax.getY() + hpBarMax.getHeight() + 3,hpBarMax.getWidth(),hpBarMax.getHeight());
@@ -130,12 +137,12 @@ public class Player extends Character {
 			g.fill(skill3);
 			g.fill(skill4);
 		}
-		g.setColor(Color.magenta);
-		g.drawString("HP: " + getLp() + "/" + maxHpAsInt, hpBarMax.getCenterX() - hpBarMax.getWidth() / 2 + 2, hpBarMax.getCenterY() - currentHp.getHeight() / 2);
 		g.setColor(Color.red);
 		g.fill(currentHp);
 		g.setColor(Color.blue);
 		g.fill(currentMp);
+		hpString.drawString(hpBarMax.getCenterX() - hpBarMax.getWidth() / 2 + 4, hpBarMax.getCenterY() - currentHp.getHeight() / 2, "HP: " + getLp() + "/" + maxHpAsInt, Color.black);
+		mpString.drawString(mpBarMax.getCenterX() - mpBarMax.getWidth() / 2 + 4, mpBarMax.getCenterY() - currentMp.getHeight() / 2, "MP: " + mp + "/" + maxMpAsInt, Color.black);
 	}
 
 	// Getter and Setter

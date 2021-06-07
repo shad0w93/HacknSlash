@@ -4,9 +4,11 @@ import levelgenerator.Dungeon;
 import minigame.Minigame;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 import player.Player;
 
-public class Game extends BasicGame {
+public class Game extends BasicGameState {
 
 	private Input input;
 	private Rectangle mainGame;
@@ -19,52 +21,53 @@ public class Game extends BasicGame {
 	private Minigame minigame;
 	private Dungeon dungeon;
 	private Player player;
+	private Highscore highscore;
 
-	public Game() {
-		super("Hack'n'Slash");
-	}
-
-	public static void main(String[] args) throws SlickException {
-		AppGameContainer container = new AppGameContainer(new 
-				Game());
-		container.setDisplayMode(1500, 1000, false);
-		container.start();
+	@Override
+	public int getID() {
+		return 2;
 	}
 
 	@Override
-	public void render(GameContainer container, Graphics g) throws SlickException {
-		g.setColor(Color.darkGray);
-		g.fill(mainGame);
-
-		g.setColor(Color.black);
-		g.fill(miniGame);
-
-		g.setColor(Color.green);
-		//g.fill(spell);
-		minigame.render(container, g);
-		player.render(container, g);
-		dungeon.render(container, g);
-	}
-
-	@Override
-	public void init(GameContainer container) throws SlickException {
-		input = container.getInput();
-		setGameField(container);
-		container.setMinimumLogicUpdateInterval(5);
-		container.setMaximumLogicUpdateInterval(5);
+	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+		input = gameContainer.getInput();
+		setGameField(gameContainer);
+		gameContainer.setMinimumLogicUpdateInterval(5);
+		gameContainer.setMaximumLogicUpdateInterval(5);
 		minigame = new Minigame(xMiniGame);
 		dungeon = new Dungeon(mainGameWidth, mainGameHeight);
 		player = new Player(xMiniGame);
 	}
 
 	@Override
-	public void update(GameContainer container, int delta) throws SlickException {
+	public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
+		graphics.setColor(Color.darkGray);
+		graphics.fill(mainGame);
+
+		graphics.setColor(Color.black);
+		graphics.fill(miniGame);
+
+		graphics.setColor(Color.green);
+		//g.fill(spell);
+		minigame.render(gameContainer, graphics);
+		player.render(gameContainer, graphics);
+		dungeon.render(gameContainer, graphics);
+	}
+
+	@Override
+	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			container.exit();
+			stateBasedGame.enterState(1);
 		}
-		minigame.update(container, delta, input);
-		player.update(dungeon, container, delta, input);
-		dungeon.update(container, delta, input, player);
+
+		minigame.update(gameContainer, i , input);
+		player.update(dungeon, gameContainer, i, input);
+		dungeon.update(gameContainer, i, input, player);
+
+		if (player.getLp() <= 0) {
+			highscore = new Highscore(minigame.getScore());
+			stateBasedGame.enterState(3);
+		}
 	}
 
 	public void setGameField(GameContainer container) {

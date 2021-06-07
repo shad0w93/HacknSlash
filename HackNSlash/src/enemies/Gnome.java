@@ -12,6 +12,8 @@ public class Gnome extends Enemy {
 		
 	public EnemyState gnomeState;
 	private int delay;
+	private int dmgDelay;
+	private int dmg = 5;
 	private float playerPosX;
 	private float playerPosY;
 	private Random random;
@@ -36,8 +38,11 @@ public class Gnome extends Enemy {
 		playerPosX = player.getxPos() + (random.nextInt(20)+5);
 		playerPosY = player.getyPos() + (random.nextInt(20)+5);
 		gnomeState.update(this, delta, player);
-		if (circle.contains(playerPosX,playerPosY)) {
-			inflictDamage(5);
+
+		dmgDelay += delta;
+		if (circle.contains(playerPosX,playerPosY) & dmgDelay >= 1000) {
+			inflictPlayerDamage(dmg, player);
+			dmgDelay = 0;
 		}
 	}
 
@@ -47,7 +52,9 @@ public class Gnome extends Enemy {
 	};
 
 	@Override
-	public void inflictDamage(int dmgAmount) {
-
+	public void inflictPlayerDamage(int dmgAmount, Player player) {
+		player.setLp(player.getLp()-dmgAmount);
+		//TODO: death??
 	}
+
 }
