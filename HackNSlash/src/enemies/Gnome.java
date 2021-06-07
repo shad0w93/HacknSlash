@@ -14,8 +14,6 @@ public class Gnome extends Enemy {
 	private int delay;
 	private int dmgDelay;
 	private int dmg = 5;
-	private float playerPosX;
-	private float playerPosY;
 	private Random random;
 	
 	public Gnome() {
@@ -34,16 +32,7 @@ public class Gnome extends Enemy {
 		delay = 0;
 
 		random = new Random();
-		// Position des Spielers wird verfälscht, damit der Spieler nicht genau verfolgt wird
-		playerPosX = player.getxPos() + (random.nextInt(20)+5);
-		playerPosY = player.getyPos() + (random.nextInt(20)+5);
 		gnomeState.update(this, delta, player);
-
-		dmgDelay += delta;
-		if (circle.contains(playerPosX,playerPosY) & dmgDelay >= 1000) {
-			inflictPlayerDamage(dmg, player);
-			dmgDelay = 0;
-		}
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException{
@@ -54,7 +43,6 @@ public class Gnome extends Enemy {
 	@Override
 	public void inflictPlayerDamage(int dmgAmount, Player player) {
 		player.setLp(player.getLp()-dmgAmount);
-		//TODO: death??
 	}
 
 }

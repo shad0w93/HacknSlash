@@ -17,7 +17,6 @@ public class Shapeshooter extends Enemy {
 	int shootTime;
 	int attackRange = 500;
 	int shootingUpdate = 1;
-	private int dmgCooldownInMs;
 	int gameBorderXY = 50;
 
 	public Shapeshooter() {
@@ -59,18 +58,18 @@ public class Shapeshooter extends Enemy {
 			shootPlayer(delta, player.getxPos(), player.getyPos());
 		} else {
 			// Bewegungsaktion für bestehenden Schuss
-			dmgCooldownInMs += delta;
-			for (Projectile currentProjectile : projectiles) {
-				currentProjectile.updateProjectile();
-				if (player.getplayerShape().contains(currentProjectile.getShape()) & dmgCooldownInMs > 1000) {
-						inflictPlayerDamage(dmgAmount, player);
-						dmgCooldownInMs = 0;
-					}
+			for (int i = projectiles.size() - 1; i >= 0; i--) {
+				Projectile c = projectiles.get(i);
+				c.updateProjectile();
+				if (player.getplayerShape().intersects(c.getShape())) {
+					inflictPlayerDamage(dmgAmount, player);
+					projectiles.remove(c);
 				}
 			}
 			// Projektile außerhalb des Spielbereichs löschen
 			Projectile.deleteProjectiles(projectiles, dungeonSizeX);
 		}
+	}
 
 	private void shootPlayer(int delta, float playerPosX, float playerPosY) {
 		if (playerPosX < circle.getCenterX()) {
