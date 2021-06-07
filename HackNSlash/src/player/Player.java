@@ -9,6 +9,8 @@ import java.awt.Font;
 
 public class Player extends Character {
 
+	private PlayerClass playerClass;
+
 	private String name;
 	private Shape playerShape;
 	private Rectangle hpBarMax;
@@ -25,7 +27,6 @@ public class Player extends Character {
 	private Font font;
 	private TrueTypeFont hpString;
 	private TrueTypeFont mpString;
-	private PlayerClass playerClass;
 	private float xPos;
 	private float yPos;
 	private float size;
@@ -60,40 +61,13 @@ public class Player extends Character {
 	}
 
 	public void update(Dungeon dungeon, GameContainer container, int delta, Input input) throws SlickException {
-		if (container.getInput().isKeyDown(Input.KEY_RIGHT)) {
-			xPos = xPos + velocity;
-			playerShape.setCenterX(xPos);
-			if (checkForWallCollision(dungeon, 1)) {
-				xPos = xPos - velocity;
-				playerShape.setCenterX(xPos);
-			}
-		}
-		if (container.getInput().isKeyDown(Input.KEY_LEFT)) {
-			xPos = xPos - velocity;
-			playerShape.setCenterX(xPos);
-			if (checkForWallCollision(dungeon, 3)) {
-				xPos = xPos + velocity;
-				playerShape.setCenterX(xPos);
-			}
-		}
-		if (container.getInput().isKeyDown(Input.KEY_UP)) {
-			yPos = yPos - velocity;
-			playerShape.setCenterY(yPos);
-			if (checkForWallCollision(dungeon, 0)) {
-				yPos = yPos + velocity;
-				playerShape.setCenterX(xPos);
-			}
-		}
-		if (container.getInput().isKeyDown(Input.KEY_DOWN)) {
-			yPos = yPos + velocity;
-			playerShape.setCenterY(yPos);
-			if (checkForWallCollision(dungeon, 2)) {
-				yPos = yPos - velocity;
-				playerShape.setCenterX(xPos);
-			}
-		}
+		updatePlayerHealth(dungeon, container, delta, input);
+		movePlayer(dungeon, container, delta, input);
 		playerClass.update(container, delta, input);
 
+	}
+	
+    private void updatePlayerHealth(Dungeon dungeon, GameContainer container, int delta, Input input) {
 		int maxHealth = (int) (hpBarMax.getWidth() - 5);
 		int maxMana = (int) (mpBarMax.getWidth() - 5);
 		if (lp != 100) {
@@ -106,8 +80,42 @@ public class Player extends Character {
 		} else {
 			currentMp.setWidth(maxMana);
 		}
+    }
+    
+	private void movePlayer(Dungeon dungeon, GameContainer container, int delta, Input input) {
+		if (container.getInput().isKeyDown(Input.KEY_D)) {
+			xPos = xPos + velocity;
+			playerShape.setCenterX(xPos);
+			if (checkForWallCollision(dungeon, 1)) {
+				xPos = xPos - velocity;
+				playerShape.setCenterX(xPos);
+			}
+		}
+		if (container.getInput().isKeyDown(Input.KEY_A)) {
+			xPos = xPos - velocity;
+			playerShape.setCenterX(xPos);
+			if (checkForWallCollision(dungeon, 3)) {
+				xPos = xPos + velocity;
+				playerShape.setCenterX(xPos);
+			}
+		}
+		if (container.getInput().isKeyDown(Input.KEY_W)) {
+			yPos = yPos - velocity;
+			playerShape.setCenterY(yPos);
+			if (checkForWallCollision(dungeon, 0)) {
+				yPos = yPos + velocity;
+				playerShape.setCenterX(xPos);
+			}
+		}
+		if (container.getInput().isKeyDown(Input.KEY_S)) {
+			yPos = yPos + velocity;
+			playerShape.setCenterY(yPos);
+			if (checkForWallCollision(dungeon, 2)) {
+				yPos = yPos - velocity;
+				playerShape.setCenterX(xPos);
+			}
+		}
 	}
-
 	private boolean checkForWallCollision(Dungeon dungeon, int direction) {
 		boolean hitsAWall = false;
 			for (Rectangle wall : dungeon.walls[dungeon.levelPositionX][dungeon.levelPositionY][direction]) {
