@@ -1,21 +1,17 @@
 package levelgenerator;
 
-import java.util.ArrayList;
-import java.util.Random;
-
+import enemies.Enemy;
+import enemies.Gnome;
+import enemies.Shapeshooter;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-import org.w3c.dom.css.Rect;
-
-import enemies.Enemy;
-import enemies.Gnome;
-import enemies.Projectile;
-import enemies.Shapeshooter;
 import player.Player;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class WoodenForest implements DungeonState {
 	public int level;
@@ -26,13 +22,14 @@ public class WoodenForest implements DungeonState {
 	
 	//Enemies
 	private ArrayList<Enemy> enemies[][];
+	private int dmgCollision = 5;
+	private float damageToEnemy = 100;
 
 	public WoodenForest(Dungeon dungeon) {
 		random = new Random();
 		levelRoomDoors = new int[dungeon.walls.length][dungeon.walls[0].length][4];
 		newDungeonLevel(dungeon);
 		spawnEnemies(dungeon);
-
 	}
 
 	public void newDungeonLevel(Dungeon dungeon) {
@@ -326,7 +323,6 @@ public class WoodenForest implements DungeonState {
 		}			
 	}
 
-	@SuppressWarnings({ "unchecked", "static-access" })
 	private void initEnemies(Dungeon dungeon) {
 		enemies = new ArrayList[dungeon.maxXPosition][dungeon.maxYPosition];
 		for (int i = 0; i < enemies.length; i++) {
@@ -339,8 +335,28 @@ public class WoodenForest implements DungeonState {
 	@Override
 	public void moveEnemies(Dungeon dungeon, GameContainer container, int delta, Input input, Player player) throws SlickException {
 		for (int i = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; i >= 0; i--) {
-			enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).update(container, delta, player.getxPos(), player.getyPos());;
-		}		
+			enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).update(container, delta, player);
+			if (player.getplayerShape().intersects(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).circle)) {
+				enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).inflictPlayerDamage(dmgCollision, player);
+				enemies[dungeon.levelPositionX][dungeon.levelPositionY].remove(i);
+			}
+		}
+	}
+
+	@Override
+	public void projectileHitCalculation(Dungeon dungeon, GameContainer container, int delta, Input input, Player player) {
+		for (int i = player.playerProjectiles.size() - 1; i >= 0; i--) {
+			for (int j = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; j >= 0; j--) {
+				System.out.println("Player Pos: " + i + "\n Enemy Pos: " + j);
+				if (player.playerProjectiles.get(i).getShape().intersects(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).circle)) {
+					enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).setHp(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).getHp() - damageToEnemy);
+					if (enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).getHp() <= 0) {
+						enemies[dungeon.levelPositionX][dungeon.levelPositionY].remove(j);
+					}
+					player.playerProjectiles.remove(i);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -350,5 +366,4 @@ public class WoodenForest implements DungeonState {
 			
 		}			
 	}
-
 }

@@ -54,14 +54,14 @@ public class Minigame {
                     circles.remove(i);
                     score += 150;
                 }
-
             }
         }
 
     }
 
     private boolean checkInput(Input input, Shape currentCircle) {
-        return input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) & currentCircle.contains(input.getMouseX(), input.getMouseY());
+        return (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && currentCircle.contains(input.getMouseX(), input.getMouseY()));
+        //TODO: change to isMouseButtonPressed (funktioniert leider noch nicht!, Punkte gehen dann zwar, aber Kreise werden nnicht kleiner)
     }
 
     private void addNewCircle(float centerX, float centerY, float newCircleRadius) {
@@ -82,10 +82,17 @@ public class Minigame {
         } else {
             g.setColor(Color.red);
         }
-        g.drawString("Score: " + score + " pts", container.getWidth() - (container.getWidth() / 3) + 10, 10);
+        g.drawString("Score: " + score + " pts", container.getWidth() - (container.getWidth() / 3) + 10, 100);
         if (score < 0) {
             g.setColor(Color.red);
             g.drawString("WARNING: YOU ARE GETTING A PENALTY!", (container.getWidth() - container.getWidth() / 3) + 125, container.getHeight() / 2);
         }
+    }
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

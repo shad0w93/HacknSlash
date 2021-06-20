@@ -54,7 +54,7 @@ public class Dungeon {
 		}
 
 		dungeonState.moveEnemies(this, container, delta, input, player);
-
+		dungeonState.projectileHitCalculation(this, container, delta, input, player);
 		checkForDoor(player, delta);
 	}
 

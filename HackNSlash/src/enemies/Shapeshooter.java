@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import player.Player;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class Shapeshooter extends Enemy {
 	public EnemyState shapeshooterState;
 	Projectile projectile;
 	ArrayList<Projectile> projectiles;
-
+	private int dmgAmount = 2;
 	int shootTime;
 	int attackRange = 500;
 	int shootingUpdate = 1;
@@ -23,6 +24,12 @@ public class Shapeshooter extends Enemy {
 		circleRadius = 16; // Größe des Gegners
 
 		this.shapeshooterState = new EasyShapeshooter(this);
+	}
+
+	@Override
+	public void update(GameContainer container, int delta, Player player) throws SlickException {
+		shapeshooterState.update(this, delta, player);
+		shootingAction(delta, player, container.getWidth() - (container.getWidth() / 3));
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException {
@@ -37,23 +44,27 @@ public class Shapeshooter extends Enemy {
 		}
 	}
 
-	public void update(GameContainer container, int delta, float x, float y) throws SlickException {
-		shapeshooterState.update(this, delta, x, y);
-		shootingAction(delta, x, y, container.getWidth() - (container.getWidth() / 3));
+	@Override
+	public void inflictPlayerDamage(int dmgAmount, Player player) {
+		player.setLp(player.getLp()-dmgAmount);
 	}
 
-
-	public void shootingAction(int delta, float x, float y,int dungeonSizeX) {
+	public void shootingAction(int delta, Player player, int dungeonSizeX) {
 		shootTime += delta;
 
 		if (shootTime >= 2000) {
 			// Neues Geschoss erstellen
 			shootTime = 0;
-			shootPlayer(delta, x, y);
+			shootPlayer(delta, player.getxPos(), player.getyPos());
 		} else {
 			// Bewegungsaktion für bestehenden Schuss
-			for (Projectile currentProjectile : projectiles) {
-				currentProjectile.updateProjectile();
+			for (int i = projectiles.size() - 1; i >= 0; i--) {
+				Projectile c = projectiles.get(i);
+				c.updateProjectile();
+				if (player.getplayerShape().intersects(c.getShape())) {
+					inflictPlayerDamage(dmgAmount, player);
+					projectiles.remove(c);
+				}
 			}
 			// Projektile außerhalb des Spielbereichs löschen
 			Projectile.deleteProjectiles(projectiles, dungeonSizeX);
