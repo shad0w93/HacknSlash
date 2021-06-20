@@ -6,11 +6,12 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import java.awt.Font;
+import java.util.ArrayList;
 
 public class Player extends Character {
 
-	private PlayerClass playerClass;
-
+	PlayerClass playerClass;
+	public ArrayList<PlayerProjectile> playerProjectiles;
 	private String name;
 	private Shape playerShape;
 	private Rectangle hpBarMax;
@@ -41,7 +42,7 @@ public class Player extends Character {
 		mp = 100;
 		velocity = 1;
 		playerShape = new Circle(xPos, yPos, size);
-		playerClass = new Wizard();
+		playerClass = new Wizard(this);
 
 		initializeUI(xMiniGame);
 	}
@@ -63,8 +64,7 @@ public class Player extends Character {
 	public void update(Dungeon dungeon, GameContainer container, int delta, Input input) throws SlickException {
 		updatePlayerHealth(dungeon, container, delta, input);
 		movePlayer(dungeon, container, delta, input);
-		playerClass.update(container, delta, input);
-
+		playerClass.update(container, delta, input, this);
 	}
 	
     private void updatePlayerHealth(Dungeon dungeon, GameContainer container, int delta, Input input) {
@@ -127,12 +127,12 @@ public class Player extends Character {
 		return hitsAWall;
 	}
 
-	public void render(GameContainer container, Graphics g) {
+	public void render(GameContainer container, Graphics g, Player player) {
 		g.setColor(Color.green);
 		g.fill(playerShape);
 
 		drawUI(g);
-
+		playerClass.render(container,g, player);
 	}
 
 	private void drawUI(Graphics g) {

@@ -23,6 +23,7 @@ public class WoodenForest implements DungeonState {
 	//Enemies
 	private ArrayList<Enemy> enemies[][];
 	private int dmgCollision = 5;
+	private float damageToEnemy = 100;
 
 	public WoodenForest(Dungeon dungeon) {
 		random = new Random();
@@ -339,7 +340,23 @@ public class WoodenForest implements DungeonState {
 				enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).inflictPlayerDamage(dmgCollision, player);
 				enemies[dungeon.levelPositionX][dungeon.levelPositionY].remove(i);
 			}
-		}		
+		}
+	}
+
+	@Override
+	public void projectileHitCalculation(Dungeon dungeon, GameContainer container, int delta, Input input, Player player) {
+		for (int i = player.playerProjectiles.size() - 1; i >= 0; i--) {
+			for (int j = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; j >= 0; j--) {
+				System.out.println("Player Pos: " + i + "\n Enemy Pos: " + j);
+				if (player.playerProjectiles.get(i).getShape().intersects(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).circle)) {
+					enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).setHp(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).getHp() - damageToEnemy);
+					if (enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).getHp() <= 0) {
+						enemies[dungeon.levelPositionX][dungeon.levelPositionY].remove(j);
+					}
+					player.playerProjectiles.remove(i);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -349,5 +366,4 @@ public class WoodenForest implements DungeonState {
 			
 		}			
 	}
-
 }
