@@ -347,9 +347,7 @@ public class WoodenForest implements DungeonState {
 
 	@Override
 	public void moveEnemies(Dungeon dungeon, GameContainer container, int delta, Input input, Player player) throws SlickException {
-		for (int i = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; i >= 0; i--) {
-			enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).update(container, delta, player);;
-		}		
+		for (int i = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; i >= 0; i--) {	
 			enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).update(container, delta, player);
 			if (player.getplayerShape().intersects(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).circle)) {
 				enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).inflictPlayerDamage(dmgCollision, player);

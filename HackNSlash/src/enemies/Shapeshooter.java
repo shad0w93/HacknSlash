@@ -47,7 +47,7 @@ public class Shapeshooter extends Enemy {
 
 	@Override
 	public void inflictPlayerDamage(int dmgAmount, Player player) {
-		player.setLp(player.getLp()-dmgAmount);
+		player.setLp(player.getLp() - dmgAmount);
 	}
 
 	public void shootingAction(int delta, Player player, int dungeonSizeX) {
@@ -70,20 +70,19 @@ public class Shapeshooter extends Enemy {
 			// Projektile außerhalb des Spielbereichs löschen
 			Projectile.deleteProjectiles(projectiles, dungeonSizeX);
 		}
+	}
 
 	private void shootPlayer(int delta, float playerPosX, float playerPosY) {
 		if (playerPosX < circle.getCenterX()) {
 			if (playerPosX + attackRange >= circle.getCenterX()) {
 				// Gegner ist links vom Spieler und in Reichweite
-				projectile = new Projectile(1, shootingUpdate, circle.getCenterX(),
-						circle.getCenterY());
+				projectile = new Projectile(1, shootingUpdate, circle.getCenterX(), circle.getCenterY());
 				projectiles.add(projectile);
 			}
 		} else if (playerPosX > circle.getCenterX()) {
 			if (playerPosX - attackRange <= circle.getCenterX()) {
 				// Gegner ist rechts vom Spieler und in Reichweite
-				projectile = new Projectile(2, shootingUpdate, circle.getCenterX(),
-						circle.getCenterY());
+				projectile = new Projectile(2, shootingUpdate, circle.getCenterX(), circle.getCenterY());
 				projectiles.add(projectile);
 			}
 		}
