@@ -50,7 +50,7 @@ public class Game extends BasicGameState {
 		graphics.setColor(Color.green);
 		//g.fill(spell);
 		minigame.render(gameContainer, graphics);
-		player.render(gameContainer, graphics);
+		player.render(gameContainer, graphics, player);
 		dungeon.render(gameContainer, graphics);
 	}
 

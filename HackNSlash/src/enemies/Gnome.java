@@ -5,7 +5,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import player.Player;
-
 import java.util.Random;
 
 public class Gnome extends Enemy {
@@ -16,6 +15,8 @@ public class Gnome extends Enemy {
 	private int dmg = 5;
 	private float playerPosX;
 	private float playerPosY;
+
+
 	private Random random;
 	
 	public Gnome() {
@@ -34,7 +35,7 @@ public class Gnome extends Enemy {
 		delay = 0;
 
 		random = new Random();
-		// Position des Spielers wird verfälscht, damit der Spieler nicht genau verfolgt wird
+		// Position des Spielers wird verfï¿½lscht, damit der Spieler nicht genau verfolgt wird
 		playerPosX = player.getxPos() + (random.nextInt(20)+5);
 		playerPosY = player.getyPos() + (random.nextInt(20)+5);
 		gnomeState.update(this, delta, player);
@@ -44,6 +45,7 @@ public class Gnome extends Enemy {
 			inflictPlayerDamage(dmg, player);
 			dmgDelay = 0;
 		}
+		gnomeState.update(this, delta, player);
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException{
@@ -54,7 +56,6 @@ public class Gnome extends Enemy {
 	@Override
 	public void inflictPlayerDamage(int dmgAmount, Player player) {
 		player.setLp(player.getLp()-dmgAmount);
-		//TODO: death??
 	}
 
 }

@@ -1,21 +1,17 @@
 package levelgenerator;
 
-import java.util.ArrayList;
-import java.util.Random;
-
+import enemies.Enemy;
+import enemies.Gnome;
+import enemies.Shapeshooter;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-import org.w3c.dom.css.Rect;
-
-import enemies.Enemy;
-import enemies.Gnome;
-import enemies.Projectile;
-import enemies.Shapeshooter;
 import player.Player;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class WoodenForest implements DungeonState {
 	public int level;
@@ -26,11 +22,14 @@ public class WoodenForest implements DungeonState {
 	
 	//Enemies
 	private ArrayList<Enemy> enemies[][];
+	private int dmgCollision = 5;
+	private float damageToEnemy = 100;
 
 	public WoodenForest(Dungeon dungeon) {
 		random = new Random();
 		levelRoomDoors = new int[dungeon.walls.length][dungeon.walls[0].length][4];
 		newDungeonLevel(dungeon);
+		spawnEnemies(dungeon);
 	}
 
 	public void newDungeonLevel(Dungeon dungeon) {
@@ -43,7 +42,7 @@ public class WoodenForest implements DungeonState {
 				buildWalls(dungeon, xWalls, yWalls);
 			}
 		}
-		// Die Türen werden je nach Dungeonart auf eine andere Art generiert
+		// Die TÃ¼ren werden je nach Dungeonart auf eine andere Art generiert
 		generateDoors(dungeon);
 		for (int xWalls = 0; xWalls < dungeon.walls.length; xWalls++) {
 			for (int yWalls = 0; yWalls < dungeon.walls[xWalls].length; yWalls++) {
@@ -79,7 +78,7 @@ public class WoodenForest implements DungeonState {
 		}
 	}
 	
-	//Setzt in jeden Raum außenrum Wände
+	//Setzt in jeden Raum auÃŸenrum WÃ¤nde
 	public void buildWalls(Dungeon dungeon, int roomX, int roomY) {
 		int x;
 		int y;
@@ -113,7 +112,7 @@ public class WoodenForest implements DungeonState {
 		}
 	}
 	
-	//Bestimmt die Reihenfolge welcher Raum zuerst die Türen bekommt und welcher zuletzt.
+	//Bestimmt die Reihenfolge welcher Raum zuerst die TÃ¼ren bekommt und welcher zuletzt.
 	public void generateDoors(Dungeon dungeon) {
 		int middleX = levelRoomDoors.length / 2;
 		int middleY = levelRoomDoors[0].length / 2;
@@ -186,7 +185,7 @@ public class WoodenForest implements DungeonState {
 		}
 	}
 	
-	//Bestimmt die Türen zu einem raum von generateDoors()
+	//Bestimmt die TÃ¼ren zu einem raum von generateDoors()
 	public void generateRoomDoors(Dungeon dungeon, int roomX, int roomY) {
 		int[] roomsAroundX = { roomX, roomX + 1, roomX, roomX - 1 };
 		int[] roomsAroundY = { roomY + 1, roomY, roomY - 1, roomY };
@@ -194,20 +193,20 @@ public class WoodenForest implements DungeonState {
 		boolean[] otherRoomHasAlreadyADoorThere = new boolean[4];
 
 		// doorSide: 0 = Oben, 1 = Rechts, 2 = Unten, 3 = Links
-		// Erstmal ist jede Seite eine Seite mit einer möglichkeit für eine Tür. Erst
+		// Erstmal ist jede Seite eine Seite mit einer mÃ¶glichkeit fÃ¼r eine TÃ¼r. Erst
 		// wenn auf der anderen Seite schon eine ist kann hier nicht noch eine erstellt
 		// werden
 		for (int i = 0; i < doorCanBeThere.length; i++) {
 			doorCanBeThere[i] = true;
 		}
-		// Erstmal hat außenrum kein Raum eine Tür
+		// Erstmal hat auÃŸenrum kein Raum eine TÃ¼r
 		for (int i = 0; i < otherRoomHasAlreadyADoorThere.length; i++) {
 			otherRoomHasAlreadyADoorThere[i] = false;
 		}
 		boolean enoughDoorsAreThere = false;
 		while (!enoughDoorsAreThere) {
 			for (int doorSide = 0; doorSide < levelRoomDoors[0][0].length; doorSide++) {
-				// von dem Anderen Raum die Tür Position berechnen
+				// von dem Anderen Raum die TÃ¼r Position berechnen
 				int otherDoorSide = 0;
 				if (doorSide == 0) {
 					otherDoorSide = 2;
@@ -248,7 +247,7 @@ public class WoodenForest implements DungeonState {
 		}
 	}
 	
-	//Erstellt die jeweiligen Türen von generateRoomDoors()
+	//Erstellt die jeweiligen TÃ¼ren von generateRoomDoors()
 	public void setRoomDoors(Dungeon dungeon, int i, int f) {
 		for (int d = 0; d < levelRoomDoors[0][0].length; d++) {
 			if (levelRoomDoors[i][f][d] == 1) {
@@ -298,7 +297,7 @@ public class WoodenForest implements DungeonState {
 		destroyWallWhereTheDoorsAre(dungeon, i, f);
 	}
 
-	//Löscht die jeweiligen Wände wo jetzt Türen sind (von den jeweils mitgegebenen Raum
+	//LÃ¶scht die jeweiligen WÃ¤nde wo jetzt TÃ¼ren sind (von den jeweils mitgegebenen Raum
 	public void destroyWallWhereTheDoorsAre(Dungeon dungeon, int roomX, int roomY) {
 		for (int direction = 0; direction < 4; direction++) {
 			for (Rectangle rectangle : dungeon.doors[roomX][roomY][direction]) {
@@ -337,7 +336,6 @@ public class WoodenForest implements DungeonState {
 		}			
 	}
 
-	@SuppressWarnings({ "unchecked", "static-access" })
 	private void initEnemies(Dungeon dungeon) {
 		enemies = new ArrayList[dungeon.maxXPosition][dungeon.maxYPosition];
 		for (int i = 0; i < enemies.length; i++) {
@@ -352,6 +350,28 @@ public class WoodenForest implements DungeonState {
 		for (int i = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; i >= 0; i--) {
 			enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).update(container, delta, player);;
 		}		
+			enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).update(container, delta, player);
+			if (player.getplayerShape().intersects(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).circle)) {
+				enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(i).inflictPlayerDamage(dmgCollision, player);
+				enemies[dungeon.levelPositionX][dungeon.levelPositionY].remove(i);
+			}
+		}
+	}
+
+	@Override
+	public void projectileHitCalculation(Dungeon dungeon, GameContainer container, int delta, Input input, Player player) {
+		for (int i = player.playerProjectiles.size() - 1; i >= 0; i--) {
+			for (int j = enemies[dungeon.levelPositionX][dungeon.levelPositionY].size() - 1; j >= 0; j--) {
+				System.out.println("Player Pos: " + i + "\n Enemy Pos: " + j);
+				if (player.playerProjectiles.get(i).getShape().intersects(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).circle)) {
+					enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).setHp(enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).getHp() - damageToEnemy);
+					if (enemies[dungeon.levelPositionX][dungeon.levelPositionY].get(j).getHp() <= 0) {
+						enemies[dungeon.levelPositionX][dungeon.levelPositionY].remove(j);
+					}
+					player.playerProjectiles.remove(i);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -361,5 +381,4 @@ public class WoodenForest implements DungeonState {
 			
 		}			
 	}
-
 }
