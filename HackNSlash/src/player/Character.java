@@ -1,14 +1,14 @@
 package player;
 
 public abstract class Character {
-
-    private String name;
-    int lp = 100;
-    int mp = 100;
-    private float xPos;
-    private float yPos;
-    private float size;
-    private float velocity;
+	
+	private String name;
+	int lp = 100;
+	int mp = 100;
+	private float xPos;
+	private float yPos;
+	private float size;
+	private float velocity;
 
     //Getter and Setter
     public String getName() {
@@ -66,6 +66,4 @@ public abstract class Character {
     public void setVelocity(float velocity) {
         this.velocity = velocity;
     }
-
-
 }

@@ -5,7 +5,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import player.Player;
-
 import java.util.Random;
 
 public class Gnome extends Enemy {
@@ -14,6 +13,10 @@ public class Gnome extends Enemy {
 	private int delay;
 	private int dmgDelay;
 	private int dmg = 5;
+	private float playerPosX;
+	private float playerPosY;
+
+
 	private Random random;
 	
 	public Gnome() {
@@ -32,6 +35,16 @@ public class Gnome extends Enemy {
 		delay = 0;
 
 		random = new Random();
+		// Position des Spielers wird verf�lscht, damit der Spieler nicht genau verfolgt wird
+		playerPosX = player.getxPos() + (random.nextInt(20)+5);
+		playerPosY = player.getyPos() + (random.nextInt(20)+5);
+		gnomeState.update(this, delta, player);
+
+		dmgDelay += delta;
+		if (circle.contains(playerPosX,playerPosY) & dmgDelay >= 1000) {
+			inflictPlayerDamage(dmg, player);
+			dmgDelay = 0;
+		}
 		gnomeState.update(this, delta, player);
 	}
 

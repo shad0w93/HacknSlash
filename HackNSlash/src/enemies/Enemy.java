@@ -7,6 +7,7 @@ import org.newdawn.slick.geom.Circle;
 import player.Player;
 
 public abstract class Enemy extends Being {
+
 	public Circle circle;
 	public float circleRadius;
 	public abstract void update(GameContainer container, int delta, Player player)throws SlickException;

@@ -1,5 +1,9 @@
 package player;
 
+import java.util.ArrayList;
+
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.*;
 import enemies.Enemy;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -33,7 +37,7 @@ public class Wizard implements PlayerClass{
 	}
 
 	public void attack(Input input, Player player) {
-		// Direction of attack (bspw. W + D schr‰g oben rechts)
+		// Direction of attack (bspw. W + D schr√§g oben rechts)
 		if (input.isKeyDown(input.KEY_W)) {
 			direction = 0;
 		}
@@ -66,7 +70,6 @@ public class Wizard implements PlayerClass{
 		}
 	}
 
-	@Override
 	public void inflictEnemyDamage(int dmgAmount, Enemy enemy) {
 		enemy.setHp(enemy.getHp() - dmgAmount);
 	}

@@ -22,6 +22,9 @@ public class Dungeon {
 
 	public ArrayList<Rectangle> walls[][][];
 	public ArrayList<Rectangle> doors[][][];
+	public Rectangle nextLevelStair[][];
+	public int xNextLevelStair;
+	public int yNextLevelStair;
 	public int checkForDoorTimer;
 
 	public Dungeon(int width, int height) {
@@ -39,7 +42,10 @@ public class Dungeon {
 				g.fill(rectangle);
 			}
 		}
-
+		if (xNextLevelStair == levelPositionX && yNextLevelStair == levelPositionY) {
+			g.setColor(Color.red);
+			g.fill(nextLevelStair[levelPositionX][levelPositionY]);
+		}
 		dungeonState.renderEnemies(this, container, g);
 		/*
 		 * g.setColor(Color.blue); for (Rectangle rectangle : doors) {
@@ -48,13 +54,15 @@ public class Dungeon {
 	}
 
 	public void update(GameContainer container, int delta, Input input, Player player) throws SlickException {
-		// Just for testing!!!
-		if (container.getInput().isKeyPressed(Input.KEY_L)) {
-			dungeonState.newDungeonLevel(this);
+		// New Level?
+		if (xNextLevelStair == levelPositionX && yNextLevelStair == levelPositionY) {
+			if (player.getplayerShape().intersects(nextLevelStair[xNextLevelStair][yNextLevelStair])) {
+				dungeonState.newDungeonLevel(this);
+			}
 		}
-
 		dungeonState.moveEnemies(this, container, delta, input, player);
 		dungeonState.projectileHitCalculation(this, container, delta, input, player);
+
 		checkForDoor(player, delta);
 	}
 
@@ -86,9 +94,9 @@ public class Dungeon {
 		}
 
 	}
-	
+
 	private void setNewPlayerPosition(int direction, Player player) {
-		switch(direction) {
+		switch (direction) {
 		case 0:
 			player.setyPos(player.getyPos() + 825);
 			break;
@@ -102,9 +110,9 @@ public class Dungeon {
 			player.setxPos(player.getxPos() + 825);
 			break;
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void initDoors() {
 		doors = new ArrayList[maxXPosition][maxYPosition][4];

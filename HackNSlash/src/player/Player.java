@@ -6,6 +6,10 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import java.awt.Font;
+
+public class Player extends Character {
+
+private PlayerClass playerClass;
 import java.util.ArrayList;
 
 public class Player extends Character {
@@ -64,6 +68,7 @@ public class Player extends Character {
 	public void update(Dungeon dungeon, GameContainer container, int delta, Input input) throws SlickException {
 		updatePlayerHealth(dungeon, container, delta, input);
 		movePlayer(dungeon, container, delta, input);
+		playerClass.update(container, delta, input);
 		playerClass.update(container, delta, input, this);
 	}
 	
@@ -132,6 +137,7 @@ public class Player extends Character {
 		g.fill(playerShape);
 
 		drawUI(g);
+
 		playerClass.render(container,g, player);
 	}
 
